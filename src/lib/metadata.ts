@@ -178,6 +178,16 @@ function buildMetadata(
 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
+  robots: siteConfig.indexingEnabled
+    ? {
+        index: true,
+        follow: true,
+      }
+    : {
+        index: false,
+        follow: false,
+        noarchive: true,
+      },
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.legalName }],
   creator: siteConfig.legalName,

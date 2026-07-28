@@ -45,6 +45,7 @@ export const siteConfig = {
   siteUrl:
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
     "https://all-in-one-labs.com",
+  indexingEnabled: process.env.NEXT_PUBLIC_INDEX_SITE === "true",
   bookingUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ??
     "https://calendly.com/elliot-theaioecom/30-minute-meeting-clone",

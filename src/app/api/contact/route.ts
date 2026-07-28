@@ -34,7 +34,7 @@ function isRateLimited(ip: string) {
 
 async function verifyTurnstile(token: string, ip: string) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return process.env.NODE_ENV !== "production";
+  if (!secret) return !process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   if (!token) return false;
 
   const response = await fetch(

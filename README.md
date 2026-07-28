@@ -23,6 +23,8 @@ npm run test:e2e
 ## Required production configuration
 
 - Register and verify `all-in-one-labs.com`.
+- Keep `NEXT_PUBLIC_INDEX_SITE=false` until the custom domain, forms, and
+  analytics are ready; switch it to `true` only for the public launch.
 - Create `hello@all-in-one-labs.com`.
 - Configure Resend and Cloudflare Turnstile.
 - Replace the temporary booking URL with a Labs-branded Calendly event.
@@ -34,6 +36,7 @@ See `.env.example` for environment variables.
 ## Deployment
 
 The source repository is owned by the `scalecommercegroup` GitHub account.
-Connect the repository to Vercel, add the production environment variables,
-and attach the custom domain only after the launch gates in the project plan
-have passed.
+The current review deployment is
+`https://all-in-one-labs-agency.vercel.app`. Connect the repository to
+Vercel, add the production environment variables, and attach the custom domain
+only after the launch gates in the project plan have passed.
