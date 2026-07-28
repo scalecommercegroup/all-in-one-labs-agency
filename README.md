@@ -25,6 +25,8 @@ npm run test:e2e
 - Register and verify `all-in-one-labs.com`.
 - Keep `NEXT_PUBLIC_INDEX_SITE=false` until the custom domain, forms, and
   analytics are ready; switch it to `true` only for the public launch.
+- Keep `NEXT_PUBLIC_CONTACT_FORM_ENABLED=false` until Resend and Turnstile
+  have been configured and a real submission has been received successfully.
 - Create `hello@all-in-one-labs.com`.
 - Configure Resend and Cloudflare Turnstile.
 - Replace the temporary booking URL with a Labs-branded Calendly event.
@@ -39,4 +41,6 @@ The source repository is owned by the `scalecommercegroup` GitHub account.
 The current review deployment is linked from the GitHub repository homepage.
 Connect the repository to Vercel, add the production environment variables,
 and attach the custom domain only after the launch gates in the project plan
-have passed.
+have passed. Until then, the public review deployment keeps indexing and the
+unconnected form disabled while preserving direct email, phone, and booking
+routes.

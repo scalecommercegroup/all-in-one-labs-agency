@@ -52,10 +52,10 @@ export function ContactForm({ locale }: { locale: Locale }) {
     const payload = {
       name: formData.get("name"),
       email: formData.get("email"),
-      phone: formData.get("phone"),
-      company: formData.get("company"),
-      companyUrl: formData.get("companyUrl"),
-      companySize: formData.get("companySize"),
+      phone: formData.get("phone") ?? "",
+      company: formData.get("company") ?? "",
+      companyUrl: formData.get("companyUrl") ?? "",
+      companySize: formData.get("companySize") ?? "",
       service: formData.get("service"),
       challenge: formData.get("challenge"),
       privacyAccepted: formData.get("privacyAccepted") === "on",
@@ -87,18 +87,20 @@ export function ContactForm({ locale }: { locale: Locale }) {
       window.plausible?.("Contact Form Success", {
         props: { locale, service: String(payload.service) },
       });
-    } catch {
+    } catch (error) {
       setStatus("error");
       setMessage(
-        isSv
-          ? "Något gick fel. Försök igen eller mejla oss direkt på elliot@theaioecom.com."
-          : "Something went wrong. Try again or email us directly at elliot@theaioecom.com.",
+        error instanceof Error
+          ? error.message
+          : isSv
+            ? "Något gick fel. Försök igen eller mejla oss direkt på elliot@theaioecom.com."
+            : "Something went wrong. Try again or email us directly at elliot@theaioecom.com.",
       );
     }
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit} noValidate>
+    <form className="contact-form" onSubmit={handleSubmit}>
       <div className="form-row form-row--two">
         <label>
           <span>{isSv ? "Namn" : "Name"} *</span>
@@ -190,7 +192,12 @@ export function ContactForm({ locale }: { locale: Locale }) {
       <div className="honeypot" aria-hidden="true">
         <label>
           Website
-          <input name="website" tabIndex={-1} autoComplete="off" />
+          <input
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
         </label>
       </div>
 

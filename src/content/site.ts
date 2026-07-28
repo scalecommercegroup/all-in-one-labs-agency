@@ -42,10 +42,13 @@ export const siteConfig = {
   legalName: "ScaleCommerce Group AB",
   organizationNumber: "559437-8761",
   address: "Kemistvägen 2A, 183 79 Täby, Sweden",
+  addressSv: "Kemistvägen 2A, 183 79 Täby, Sverige",
   siteUrl:
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
     "https://all-in-one-labs.com",
   indexingEnabled: process.env.NEXT_PUBLIC_INDEX_SITE === "true",
+  contactFormEnabled:
+    process.env.NEXT_PUBLIC_CONTACT_FORM_ENABLED === "true",
   bookingUrl:
     process.env.NEXT_PUBLIC_CALENDLY_URL ??
     "https://calendly.com/elliot-theaioecom/30-minute-meeting-clone",
@@ -99,7 +102,7 @@ export const services: ServiceDefinition[] = [
           },
           {
             title: "Lärande",
-            text: "Resultaten mäts på leads och kvalitet—not bara positioner.",
+            text: "Resultaten mäts på leads och kvalitet – inte bara positioner.",
           },
         ],
         boundaries: [
@@ -393,7 +396,7 @@ export const services: ServiceDefinition[] = [
         slug: "webbplatser",
         navLabel: "Webbplatser",
         eyebrow: "Design & utveckling",
-        title: "Webbplatser byggda för beslut—not bara besök.",
+        title: "Webbplatser byggda för beslut – inte bara besök.",
         intro:
           "Vi förenar positionering, innehåll, UX och ren utveckling till snabba webbplatser som gör erbjudandet lätt att förstå och agera på.",
         promise:
@@ -557,7 +560,7 @@ export const services: ServiceDefinition[] = [
         slug: "ai-chattbotar",
         navLabel: "AI-chattbotar",
         eyebrow: "Digital kunddialog",
-        title: "En AI-chattbot som vet när den ska svara—and när den ska lämna över.",
+        title: "En AI-chattbot som vet när den ska svara – och när den ska lämna över.",
         intro:
           "Vi bygger avgränsade, varumärkesanpassade chattbotar som besvarar godkända frågor, kvalificerar leads och kopplar in människor när det behövs.",
         promise:
@@ -884,7 +887,7 @@ export const homeCopy = {
     eyebrow: "Tillväxtsystem för svenska företag",
     title: "Synlighet. System. Tillväxt.",
     intro:
-      "Vi bygger SEO, AEO, webbplatser och AI-agenter som skapar fler kvalificerade affärer och mindre manuellt arbete.",
+      "Vi bygger SEO, Answer Engine Optimization (AEO), webbplatser och AI-agenter som skapar fler kvalificerade affärer och mindre manuellt arbete.",
     primaryCta: "Boka en kostnadsfri analys",
     secondaryCta: "Utforska våra tjänster",
     serviceTitle: "Fem discipliner. Ett sammanhängande system.",
@@ -896,7 +899,7 @@ export const homeCopy = {
     proofEyebrow: "Erfarenhet som går att spåra",
     proofTitle: "Byggt i den verkliga ekonomin.",
     proofBody:
-      "Teamet bakom Labs har arbetat med e-handel, webb, retention och tillväxt för svenska och internationella varumärken. Vi återanvänder erfarenheten—not gamla löften.",
+      "Teamet bakom Labs har arbetat med e-handel, webb, retention och tillväxt för svenska och internationella varumärken. Vi återanvänder erfarenheten – inte gamla löften.",
     processTitle: "Från oklar möjlighet till kontrollerad drift.",
     closingTitle: "Börja med det som blockerar mest.",
     closingBody:
@@ -906,7 +909,7 @@ export const homeCopy = {
     eyebrow: "Growth systems for Swedish companies",
     title: "Visibility. Systems. Growth.",
     intro:
-      "We build SEO, AEO, websites, and AI agents that create more qualified business and less manual work.",
+      "We build SEO, Answer Engine Optimization (AEO), websites, and AI agents that create more qualified business and less manual work.",
     primaryCta: "Book a free assessment",
     secondaryCta: "Explore our services",
     serviceTitle: "Five disciplines. One connected system.",
@@ -1002,7 +1005,7 @@ export const team = [
   },
   {
     name: "Vincent Wånehed",
-    role: { sv: "Account Manager", en: "Account Manager" },
+    role: { sv: "Kundansvarig", en: "Account Manager" },
     focus: {
       sv: "Kundbehov och genomförande",
       en: "Customer needs and delivery",
@@ -1010,7 +1013,7 @@ export const team = [
   },
   {
     name: "Algot Salmi",
-    role: { sv: "Account Manager", en: "Account Manager" },
+    role: { sv: "Kundansvarig", en: "Account Manager" },
     focus: {
       sv: "Projektflöde och kundrelation",
       en: "Project flow and client relationships",

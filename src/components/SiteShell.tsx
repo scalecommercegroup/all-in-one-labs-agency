@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import {
   getAlternateRoute,
@@ -20,6 +20,22 @@ function navItems(locale: Locale) {
   ];
 }
 
+function isCurrentNavItem(pathname: string, href: string, locale: Locale) {
+  const normalizedPath =
+    pathname === "/" ? pathname : pathname.replace(/\/+$/, "");
+  const normalizedHref = href === "/" ? href : href.replace(/\/+$/, "");
+  const servicesHref = getRoute("services", locale);
+
+  if (normalizedHref === servicesHref) {
+    return (
+      normalizedPath === servicesHref ||
+      normalizedPath.startsWith(`${servicesHref}/`)
+    );
+  }
+
+  return normalizedPath === normalizedHref;
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
@@ -28,22 +44,87 @@ export function SiteHeader() {
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
   function closeMenu() {
-    detailsRef.current?.removeAttribute("open");
+    if (detailsRef.current) detailsRef.current.open = false;
   }
+
+  useEffect(() => {
+    const details = detailsRef.current;
+    if (!details) return;
+
+    const isolationTargets = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        "main, .site-footer, .brand-link, .desktop-nav, .language-link, .button--header",
+      ),
+    );
+
+    const syncOpenState = () => {
+      document.documentElement.classList.toggle("menu-open", details.open);
+      for (const target of isolationTargets) {
+        if (details.open) target.setAttribute("inert", "");
+        else target.removeAttribute("inert");
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!details.open) return;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        details.open = false;
+        details.querySelector<HTMLElement>("summary")?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        details.querySelectorAll<HTMLElement>(
+          "summary, .mobile-menu__panel a[href]",
+        ),
+      ).filter((element) => element.getClientRects().length > 0);
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    details.addEventListener("toggle", syncOpenState);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      details.removeEventListener("toggle", syncOpenState);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.documentElement.classList.remove("menu-open");
+      for (const target of isolationTargets) target.removeAttribute("inert");
+    };
+  }, []);
 
   return (
     <header className="site-header">
       <a
         className="brand-link"
         href={getRoute("home", locale)}
-        aria-label={`${siteConfig.name} — ${locale === "sv" ? "startsida" : "home"}`}
+        aria-label={siteConfig.name}
       >
         <BrandMark />
       </a>
 
       <nav className="desktop-nav" aria-label={locale === "sv" ? "Huvudmeny" : "Main navigation"}>
         {items.map((item) => (
-          <a key={item.href} href={item.href}>
+          <a
+            key={item.href}
+            href={item.href}
+            aria-current={
+              isCurrentNavItem(pathname, item.href, locale) ? "page" : undefined
+            }
+          >
             {item.label}
           </a>
         ))}
@@ -74,7 +155,16 @@ export function SiteHeader() {
           <div className="mobile-menu__panel">
             <nav aria-label={locale === "sv" ? "Mobilmeny" : "Mobile navigation"}>
               {items.map((item, index) => (
-                <a key={item.href} href={item.href} onClick={closeMenu}>
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  aria-current={
+                    isCurrentNavItem(pathname, item.href, locale)
+                      ? "page"
+                      : undefined
+                  }
+                >
                   <span>0{index + 1}</span>
                   {item.label}
                 </a>
@@ -144,7 +234,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <div>
           <p className="footer-label">ScaleCommerce Group AB</p>
           <p>{siteConfig.organizationNumber}</p>
-          <p>{siteConfig.address}</p>
+          <p>{locale === "sv" ? siteConfig.addressSv : siteConfig.address}</p>
           <div className="footer-socials">
             <a href={siteConfig.linkedIn} target="_blank" rel="noreferrer">
               LinkedIn ↗

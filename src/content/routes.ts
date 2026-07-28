@@ -15,17 +15,17 @@ export interface RoutePair {
 }
 
 export const routePairs: RoutePair[] = [
-  { key: "home", sv: "/", en: "/en/" },
-  { key: "services", sv: "/tjanster/", en: "/en/services/" },
+  { key: "home", sv: "/", en: "/en" },
+  { key: "services", sv: "/tjanster", en: "/en/services" },
   ...services.map((service) => ({
     key: `service:${service.key}` as const,
-    sv: `/tjanster/${service.copy.sv.slug}/`,
-    en: `/en/services/${service.copy.en.slug}/`,
+    sv: `/tjanster/${service.copy.sv.slug}`,
+    en: `/en/services/${service.copy.en.slug}`,
   })),
-  { key: "cases", sv: "/case/", en: "/en/case-studies/" },
-  { key: "about", sv: "/om-oss/", en: "/en/about/" },
-  { key: "contact", sv: "/kontakt/", en: "/en/contact/" },
-  { key: "privacy", sv: "/integritet/", en: "/en/privacy/" },
+  { key: "cases", sv: "/case", en: "/en/case-studies" },
+  { key: "about", sv: "/om-oss", en: "/en/about" },
+  { key: "contact", sv: "/kontakt", en: "/en/contact" },
+  { key: "privacy", sv: "/integritet", en: "/en/privacy" },
 ];
 
 export const allPublicRoutes = routePairs.flatMap((pair) => [pair.sv, pair.en]);
@@ -42,7 +42,8 @@ export function getRoute(
 }
 
 export function getAlternateRoute(pathname: string): string {
-  const normalized = pathname.endsWith("/") ? pathname : `${pathname}/`;
+  const normalized =
+    pathname === "/" ? pathname : pathname.replace(/\/+$/, "");
   const pair = routePairs.find(
     (candidate) => candidate.sv === normalized || candidate.en === normalized,
   );

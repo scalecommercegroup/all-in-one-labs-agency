@@ -56,7 +56,13 @@ function BookingLink({
   );
 }
 
-function ServiceLedger({ locale }: { locale: Locale }) {
+function ServiceLedger({
+  locale,
+  headingLevel = 3,
+}: {
+  locale: Locale;
+  headingLevel?: 2 | 3;
+}) {
   return (
     <div className="service-ledger">
       {services.map((service) => {
@@ -69,7 +75,11 @@ function ServiceLedger({ locale }: { locale: Locale }) {
           >
             <span className="service-ledger__index">{service.index}</span>
             <div>
-              <h3>{copy.navLabel}</h3>
+              {headingLevel === 2 ? (
+                <h2>{copy.navLabel}</h2>
+              ) : (
+                <h3>{copy.navLabel}</h3>
+              )}
               <p>{copy.promise}</p>
             </div>
             <span className="service-ledger__arrow" aria-hidden="true">
@@ -82,15 +92,35 @@ function ServiceLedger({ locale }: { locale: Locale }) {
   );
 }
 
-function EvidenceList({ locale }: { locale: Locale }) {
+function EvidenceList({
+  locale,
+  headingLevel = 3,
+}: {
+  locale: Locale;
+  headingLevel?: 2 | 3;
+}) {
   const evidence = getEvidence(locale);
   return (
     <div className="evidence-list">
       {evidence.map((record, index) => (
         <article className="evidence-row" key={record.id}>
           <span className="evidence-row__index">0{index + 1}</span>
-          <h3>{record.brand}</h3>
-          <p>{record.summary}</p>
+          {headingLevel === 2 ? (
+            <h2>{record.brand}</h2>
+          ) : (
+            <h3>{record.brand}</h3>
+          )}
+          <div className="evidence-row__summary">
+            <p>{record.summary}</p>
+            <p className="evidence-row__source">
+              <a href={record.source} target="_blank" rel="noreferrer">
+                {locale === "sv" ? "Offentlig källa" : "Public source"} ↗
+              </a>
+              <span>
+                {locale === "sv" ? "Granskad" : "Reviewed"} {record.reviewedAt}
+              </span>
+            </p>
+          </div>
           <ul aria-label={locale === "sv" ? "Områden" : "Areas"}>
             {record.services.map((service) => (
               <li key={service}>{service}</li>
@@ -241,7 +271,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
         <p>{copy.servicesIntro}</p>
       </section>
       <section className="section section--service-directory">
-        <ServiceLedger locale={locale} />
+        <ServiceLedger locale={locale} headingLevel={2} />
       </section>
       <section className="principle-band">
         <p>{isSv ? "Vår princip" : "Our principle"}</p>
@@ -260,7 +290,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
         }
         body={
           isSv
-            ? "Vi prioriterar efter affärseffekt, genomförbarhet och risk—not efter vilken tjänst som är enklast att sälja."
+            ? "Vi prioriterar efter affärseffekt, genomförbarhet och risk – inte efter vilken tjänst som är enklast att sälja."
             : "We prioritise by business impact, feasibility, and risk—not by which service is easiest to sell."
         }
       />
@@ -294,7 +324,9 @@ export function ServicePage({
           <p>{copy.intro}</p>
           <BookingLink locale={locale} tracking={`booking-${service.key}`} />
         </div>
-        <span className="service-hero__number">{service.index}</span>
+        <span className="service-hero__number" aria-hidden="true">
+          {service.index}
+        </span>
       </section>
 
       <section className="promise-band">
@@ -425,7 +457,7 @@ export function CasesPage({ locale }: { locale: Locale }) {
         <p>{copy.casesIntro}</p>
       </section>
       <section className="section section--case-page">
-        <EvidenceList locale={locale} />
+        <EvidenceList locale={locale} headingLevel={2} />
       </section>
       <section className="evidence-policy">
         <div>
@@ -546,8 +578,8 @@ export function AboutPage({ locale }: { locale: Locale }) {
         locale={locale}
         title={
           isSv
-            ? "Ett litet senior team. Ett tydligt ansvar."
-            : "A small senior team. Clear accountability."
+            ? "Ett litet team. Ett tydligt ansvar."
+            : "A small team. Clear accountability."
         }
         body={
           isSv
@@ -591,8 +623,39 @@ export function ContactPage({ locale }: { locale: Locale }) {
               ? "Ju tydligare nuläge och begränsningar, desto mer konkret blir vårt första svar."
               : "The clearer the current state and constraints, the more concrete our first response will be."}
           </p>
+          <p className="contact-form-section__qualification">
+            {isSv
+              ? "Före start får ni skriftlig omfattning, beroenden, ansvar, supportupplägg och pris."
+              : "Before work starts, you receive written scope, dependencies, ownership, support model, and price."}
+          </p>
         </div>
-        <ContactForm locale={locale} />
+        {siteConfig.contactFormEnabled ? (
+          <ContactForm locale={locale} />
+        ) : (
+          <div className="contact-fallback">
+            <p>{isSv ? "Tillfällig kontaktväg" : "Temporary enquiry route"}</p>
+            <h2>
+              {isSv
+                ? "Formuläret öppnar när den säkra e-postkanalen är verifierad."
+                : "The form will open when the secure email channel is verified."}
+            </h2>
+            <p>
+              {isSv
+                ? "Tills dess kan du boka analysen eller mejla direkt. Ingen information försvinner i ett oanslutet formulär."
+                : "Until then, book the assessment or email us directly. No information is sent into an unconnected form."}
+            </p>
+            <div className="contact-fallback__actions">
+              <BookingLink
+                locale={locale}
+                className="button button--light"
+                tracking="booking-contact-fallback"
+              />
+              <a className="text-link text-link--light" href={`mailto:${siteConfig.email}`}>
+                {siteConfig.email}
+              </a>
+            </div>
+          </div>
+        )}
       </section>
     </PageShell>
   );
@@ -628,7 +691,7 @@ export function PrivacyPage({ locale }: { locale: Locale }) {
         <h1>{copy.privacyTitle}</h1>
         <p>
           {isSv
-            ? "Senast granskad 28 juli 2026. Policyn beskriver den publika webbplatsen—not alla framtida kundlösningar."
+            ? "Senast granskad 28 juli 2026. Policyn beskriver den publika webbplatsen – inte alla framtida kundlösningar."
             : "Last reviewed 28 July 2026. This policy covers the public website—not every future customer solution."}
         </p>
       </section>
@@ -651,7 +714,7 @@ export function PrivacyPage({ locale }: { locale: Locale }) {
               <br />
               {siteConfig.legalName}
               <br />
-              {siteConfig.address}
+              {isSv ? siteConfig.addressSv : siteConfig.address}
             </p>
           </div>
         </article>

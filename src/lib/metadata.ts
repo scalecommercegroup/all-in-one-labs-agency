@@ -160,7 +160,7 @@ function buildMetadata(
       url: absolute(path),
       images: [
         {
-          url: absolute("/opengraph-image"),
+          url: absolute("/og-image.png"),
           width: 1200,
           height: 630,
           alt: `${siteConfig.name} — ${commonCopy[locale].servicesTitle}`,
@@ -171,7 +171,7 @@ function buildMetadata(
       card: "summary_large_image",
       title: copy.title,
       description: copy.description,
-      images: [absolute("/opengraph-image")],
+      images: [absolute("/og-image.png")],
     },
   };
 }

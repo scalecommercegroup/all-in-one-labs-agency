@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
+import sitemap from "@/app/sitemap";
 import { evidenceRecords } from "@/content/evidence";
 import {
   allPublicRoutes,
   getAlternateRoute,
   routePairs,
 } from "@/content/routes";
-import { services } from "@/content/site";
+import { commonCopy, homeCopy, services, team } from "@/content/site";
 import { contactSchema } from "@/lib/contact";
 
 describe("bilingual route architecture", () => {
@@ -18,10 +19,25 @@ describe("bilingual route architecture", () => {
   it("pairs every Swedish route with an English route", () => {
     for (const pair of routePairs) {
       expect(pair.sv.startsWith("/")).toBe(true);
-      expect(pair.en.startsWith("/en/")).toBe(true);
+      expect(pair.en === "/en" || pair.en.startsWith("/en/")).toBe(true);
       expect(getAlternateRoute(pair.sv)).toBe(pair.en);
       expect(getAlternateRoute(pair.en)).toBe(pair.sv);
     }
+  });
+
+  it("uses canonical non-trailing-slash URLs", () => {
+    for (const route of allPublicRoutes) {
+      expect(route === "/" || !route.endsWith("/")).toBe(true);
+    }
+  });
+
+  it("publishes stable sitemap modification dates", () => {
+    const first = sitemap();
+    const second = sitemap();
+    expect(first).toEqual(second);
+    expect(
+      new Set(first.map((entry) => entry.lastModified?.toString())).size,
+    ).toBe(1);
   });
 });
 
@@ -42,6 +58,21 @@ describe("service content", () => {
         expect(copy.metaDescription.length).toBeGreaterThan(50);
       }
     }
+  });
+
+  it("keeps Swedish copy free from unfinished English conjunctions", () => {
+    const swedishCopy = JSON.stringify({
+      services: services.map((service) => service.copy.sv),
+      home: homeCopy.sv,
+      common: commonCopy.sv,
+      team: team.map((person) => ({
+        role: person.role.sv,
+        focus: person.focus.sv,
+      })),
+    });
+
+    expect(swedishCopy).not.toMatch(/—(?:not|and)\b/i);
+    expect(swedishCopy).not.toContain("Account Manager");
   });
 
   it("uses unique service slugs per locale", () => {
