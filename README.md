@@ -36,7 +36,7 @@ See `.env.example` for environment variables.
 ## Deployment
 
 The source repository is owned by the `scalecommercegroup` GitHub account.
-The current review deployment is
-`https://all-in-one-labs-agency.vercel.app`. Connect the repository to
-Vercel, add the production environment variables, and attach the custom domain
-only after the launch gates in the project plan have passed.
+The current review deployment is linked from the GitHub repository homepage.
+Connect the repository to Vercel, add the production environment variables,
+and attach the custom domain only after the launch gates in the project plan
+have passed.
