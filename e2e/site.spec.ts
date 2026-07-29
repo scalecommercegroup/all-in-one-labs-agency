@@ -19,6 +19,30 @@ test("Swedish homepage presents the five-service system", async ({ page }) => {
   await expect(page.getByText("Illustrerade exempelflöden.")).toBeVisible();
 });
 
+test("homepage globe renders locally and supports horizontal drag", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const globe = page.getByRole("img", { name: "Roterande jordglob" });
+
+  await expect(globe).toHaveAttribute("data-globe-ready", "true");
+  await expect(globe.locator("canvas")).toBeVisible();
+
+  const box = await globe.boundingBox();
+  expect(box).not.toBeNull();
+
+  if (box) {
+    const startX = box.x + box.width * 0.7;
+    const y = box.y + box.height * 0.5;
+    await page.mouse.move(startX, y);
+    await page.mouse.down();
+    await expect(globe).toHaveClass(/is-dragging/);
+    await page.mouse.move(startX - box.width * 0.25, y);
+    await page.mouse.up();
+    await expect(globe).not.toHaveClass(/is-dragging/);
+  }
+});
+
 test("language switch preserves the page concept", async ({ page }, testInfo) => {
   await page.goto("/tjanster/aeo");
   if (testInfo.project.name.includes("mobile")) {
