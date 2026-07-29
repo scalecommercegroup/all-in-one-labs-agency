@@ -19,6 +19,28 @@ test("Swedish homepage presents the five-service system", async ({ page }) => {
   await expect(page.getByText("Illustrerade exempelflöden.")).toBeVisible();
 });
 
+test("homepage chatbot demonstrates sales and support without a voice panel", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const showcase = page.locator(".chatbot-showcase");
+
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "En chatt som gör jobbet — inte bara svarar.",
+    }),
+  ).toBeVisible();
+  await expect(showcase.getByRole("tab")).toHaveCount(4);
+  await expect(page.getByText("Exempelflöde · Inkommande samtal")).toHaveCount(
+    0,
+  );
+
+  await showcase.getByRole("tab", { name: /Kundsupport/ }).click();
+  await expect(showcase.getByText("Var är min beställning #10428?")).toBeVisible();
+  await expect(showcase.getByText("Svar direkt · ärende skapat")).toBeVisible();
+});
+
 test("homepage globe renders locally and supports horizontal drag", async ({
   page,
 }) => {
@@ -27,6 +49,7 @@ test("homepage globe renders locally and supports horizontal drag", async ({
 
   await expect(globe).toHaveAttribute("data-globe-ready", "true");
   await expect(globe.locator("canvas")).toBeVisible();
+  await globe.scrollIntoViewIfNeeded();
 
   const box = await globe.boundingBox();
   expect(box).not.toBeNull();

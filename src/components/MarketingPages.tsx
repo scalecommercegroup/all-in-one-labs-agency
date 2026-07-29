@@ -1,5 +1,5 @@
 import { ContactForm } from "@/components/ContactForm";
-import { DemoPanels } from "@/components/DemoPanels";
+import { ChatbotShowcase } from "@/components/ChatbotShowcase";
 import { JsonLd } from "@/components/JsonLd";
 import { OrbitGlobe } from "@/components/OrbitGlobe";
 import { PageShell } from "@/components/SiteShell";
@@ -227,15 +227,23 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       <section className="systems-section">
         <div className="systems-section__intro">
-          <Eyebrow light>{isSv ? "System före hype" : "Systems before hype"}</Eyebrow>
-          <h2>{copy.problemTitle}</h2>
-          <p>{copy.problemBody}</p>
+          <Eyebrow light>{isSv ? "AI-chattbotar" : "AI chatbots"}</Eyebrow>
+          <h2>
+            {isSv
+              ? "En chatt som gör jobbet — inte bara svarar."
+              : "A chat that does the work — not just answers."}
+          </h2>
+          <p>
+            {isSv
+              ? "Labs bygger AI-chattbotar som hjälper till att sälja, avlastar supporten, bokar möten och lämnar över till rätt person med hela kontexten kvar."
+              : "Labs builds AI chatbots that support sales, reduce support workload, book meetings, and hand over to the right person with the full context intact."}
+          </p>
         </div>
-        <DemoPanels locale={locale} />
+        <ChatbotShowcase locale={locale} />
         <p className="demo-disclaimer">
           {isSv
-            ? "Illustrerade exempelflöden. Inte kundresultat eller aktiva produktionstjänster."
-            : "Illustrated example flows. Not client results or active production services."}
+            ? "Illustrerade exempelflöden. Funktioner, svar och integrationer anpassas efter verksamhet, system och risknivå."
+            : "Illustrated example flows. Features, answers, and integrations are adapted to the business, systems, and level of risk."}
         </p>
       </section>
 
