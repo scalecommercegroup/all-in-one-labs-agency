@@ -91,6 +91,9 @@ describe("evidence controls", () => {
       expect(record.permissionStatus).toBe("existing-public-brand-proof");
       expect(record.source).toMatch(/^https:\/\//);
       expect(record.reviewedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(record.image).toMatch(/^\/cases\/.+\.webp$/);
+      expect(record.imageAlt.sv.length).toBeGreaterThan(10);
+      expect(record.imageAlt.en.length).toBeGreaterThan(10);
     }
   });
 });

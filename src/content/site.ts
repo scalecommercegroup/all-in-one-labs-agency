@@ -55,8 +55,6 @@ export const siteConfig = {
   email: "elliot@theaioecom.com",
   phoneDisplay: "+46 70 880 27 56",
   phoneHref: "+46708802756",
-  linkedIn: "https://www.linkedin.com/company/all-in-one-ecom/",
-  instagram: "https://www.instagram.com/all_in_one_ecom/",
 } as const;
 
 export const services: ServiceDefinition[] = [
@@ -989,6 +987,11 @@ export const commonCopy = {
 export const team = [
   {
     name: "Hugo Idrén",
+    image: "/team/hugo-idren.webp",
+    imageAlt: {
+      sv: "Porträtt av Hugo Idrén.",
+      en: "Portrait of Hugo Idrén.",
+    },
     role: { sv: "VD", en: "CEO" },
     focus: {
       sv: "Kommersiell riktning och partnerskap",
@@ -997,6 +1000,11 @@ export const team = [
   },
   {
     name: "Elliot Lyrberg",
+    image: "/team/elliot-lyrberg.webp",
+    imageAlt: {
+      sv: "Porträtt av Elliot Lyrberg.",
+      en: "Portrait of Elliot Lyrberg.",
+    },
     role: { sv: "Medgrundare", en: "Co-founder" },
     focus: {
       sv: "Tillväxtsystem, webb och kunddialog",
@@ -1005,6 +1013,11 @@ export const team = [
   },
   {
     name: "Vincent Wånehed",
+    image: "/team/vincent-wanehed.webp",
+    imageAlt: {
+      sv: "Porträtt av Vincent Wånehed.",
+      en: "Portrait of Vincent Wånehed.",
+    },
     role: { sv: "Kundansvarig", en: "Account Manager" },
     focus: {
       sv: "Kundbehov och genomförande",
@@ -1013,6 +1026,11 @@ export const team = [
   },
   {
     name: "Algot Salmi",
+    image: "/team/algot-salmi.webp",
+    imageAlt: {
+      sv: "Porträtt av Algot Salmi.",
+      en: "Portrait of Algot Salmi.",
+    },
     role: { sv: "Kundansvarig", en: "Account Manager" },
     focus: {
       sv: "Projektflöde och kundrelation",

@@ -28,7 +28,6 @@ export function organizationSchema(locale: Locale) {
       "@type": "Country",
       name: locale === "sv" ? "Sverige" : "Sweden",
     },
-    sameAs: [siteConfig.linkedIn, siteConfig.instagram],
   };
 }
 

@@ -9,8 +9,13 @@ test("Swedish homepage presents the five-service system", async ({ page }) => {
       name: "Synlighet. System. Tillväxt.",
     }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "SEO", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "AEO", exact: true })).toBeVisible();
+  const services = page.locator(".service-ledger");
+  await expect(
+    services.getByRole("heading", { level: 3, name: "SEO" }),
+  ).toBeVisible();
+  await expect(
+    services.getByRole("heading", { level: 3, name: "AEO" }),
+  ).toBeVisible();
   await expect(page.getByText("Illustrerade exempelflöden.")).toBeVisible();
 });
 
@@ -38,12 +43,9 @@ test("mobile navigation exposes all primary destinations", async ({
   await page.goto("/");
   await page.getByText("Meny", { exact: true }).click();
   await expect(page.getByRole("navigation", { name: "Mobilmeny" })).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Tjänster", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Kontakt", exact: true }),
-  ).toBeVisible();
+  const navigation = page.getByRole("navigation", { name: "Mobilmeny" });
+  await expect(navigation.getByRole("link", { name: /Tjänster$/ })).toBeVisible();
+  await expect(navigation.getByRole("link", { name: /Kontakt$/ })).toBeVisible();
 
   await expect
     .poll(() =>
@@ -152,4 +154,42 @@ test("service detail has no automatically detectable accessibility violations", 
     .exclude(".cf-turnstile")
     .analyze();
   expect(results.violations).toEqual([]);
+});
+
+test("case and team pages present the public proof visually", async ({ page }) => {
+  await page.goto("/case");
+  await expect(
+    page.getByRole("img", { name: "Porträttbild från Keautys varumärkesmaterial." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Barkalot" }),
+  ).toBeVisible();
+
+  await page.goto("/om-oss");
+  await expect(
+    page.getByRole("img", { name: "Porträtt av Hugo Idrén." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: "Porträtt av Algot Salmi." }),
+  ).toBeVisible();
+});
+
+test("footer navigation is compact on mobile and expanded on desktop", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/");
+  const company = page
+    .locator(".footer-group--collapsible")
+    .filter({ hasText: "Företag" });
+
+  if (testInfo.project.name.includes("mobile")) {
+    await expect(company).not.toHaveAttribute("open", "");
+    await company.locator("summary").click();
+  } else {
+    await expect(company).toHaveAttribute("open", "");
+  }
+
+  await expect(
+    company.getByRole("link", { name: "Integritet" }),
+  ).toBeVisible();
 });

@@ -3,6 +3,7 @@ import { DemoPanels } from "@/components/DemoPanels";
 import { JsonLd } from "@/components/JsonLd";
 import { OrbitGlobe } from "@/components/OrbitGlobe";
 import { PageShell } from "@/components/SiteShell";
+import Image from "next/image";
 import { getEvidence } from "@/content/evidence";
 import { getRoute } from "@/content/routes";
 import {
@@ -95,37 +96,57 @@ function ServiceLedger({
 function EvidenceList({
   locale,
   headingLevel = 3,
+  variant = "compact",
 }: {
   locale: Locale;
   headingLevel?: 2 | 3;
+  variant?: "compact" | "editorial";
 }) {
   const evidence = getEvidence(locale);
   return (
-    <div className="evidence-list">
+    <div className={`evidence-list evidence-list--${variant}`}>
       {evidence.map((record, index) => (
         <article className="evidence-row" key={record.id}>
-          <span className="evidence-row__index">0{index + 1}</span>
-          {headingLevel === 2 ? (
-            <h2>{record.brand}</h2>
-          ) : (
-            <h3>{record.brand}</h3>
-          )}
-          <div className="evidence-row__summary">
-            <p>{record.summary}</p>
-            <p className="evidence-row__source">
+          <div className="evidence-row__media">
+            <Image
+              src={record.image}
+              alt={record.imageAlt}
+              width={1200}
+              height={900}
+              sizes={
+                variant === "editorial"
+                  ? "(min-width: 64rem) 46vw, 100vw"
+                  : "(min-width: 64rem) 22vw, (min-width: 40rem) 45vw, 100vw"
+              }
+            />
+            <span aria-hidden="true">0{index + 1}</span>
+          </div>
+          <div className="evidence-row__body">
+            <header>
+              <span className="evidence-row__index">
+                {locale === "sv" ? "Dokumenterat uppdrag" : "Documented engagement"}
+              </span>
+              {headingLevel === 2 ? (
+                <h2>{record.brand}</h2>
+              ) : (
+                <h3>{record.brand}</h3>
+              )}
+            </header>
+            <p className="evidence-row__summary">{record.summary}</p>
+            <ul aria-label={locale === "sv" ? "Områden" : "Areas"}>
+              {record.services.map((service) => (
+                <li key={service}>{service}</li>
+              ))}
+            </ul>
+            <div className="evidence-row__source">
               <a href={record.source} target="_blank" rel="noreferrer">
                 {locale === "sv" ? "Offentlig källa" : "Public source"} ↗
               </a>
               <span>
                 {locale === "sv" ? "Granskad" : "Reviewed"} {record.reviewedAt}
               </span>
-            </p>
+            </div>
           </div>
-          <ul aria-label={locale === "sv" ? "Områden" : "Areas"}>
-            {record.services.map((service) => (
-              <li key={service}>{service}</li>
-            ))}
-          </ul>
         </article>
       ))}
     </div>
@@ -226,7 +247,7 @@ export function HomePage({ locale }: { locale: Locale }) {
           </div>
           <p>{copy.proofBody}</p>
         </div>
-        <EvidenceList locale={locale} />
+        <EvidenceList locale={locale} variant="compact" />
         <a className="text-link text-link--wide" href={getRoute("cases", locale)}>
           {isSv ? "Se hur vi hanterar bevis" : "See how we handle evidence"}
           <span aria-hidden="true">→</span>
@@ -451,13 +472,38 @@ export function CasesPage({ locale }: { locale: Locale }) {
 
   return (
     <PageShell locale={locale}>
-      <section className="page-hero">
-        <Eyebrow>{copy.casesEyebrow}</Eyebrow>
-        <h1>{copy.casesTitle}</h1>
-        <p>{copy.casesIntro}</p>
+      <section className="case-hero">
+        <div className="case-hero__title">
+          <Eyebrow>{copy.casesEyebrow}</Eyebrow>
+          <h1>{copy.casesTitle}</h1>
+        </div>
+        <div className="case-hero__aside">
+          <p>{copy.casesIntro}</p>
+          <dl>
+            <div>
+              <dt>{isSv ? "Offentliga referenser" : "Public references"}</dt>
+              <dd>04</dd>
+            </div>
+            <div>
+              <dt>{isSv ? "Vår standard" : "Our standard"}</dt>
+              <dd>{isSv ? "Källa · scope · datum" : "Source · scope · date"}</dd>
+            </div>
+          </dl>
+        </div>
       </section>
       <section className="section section--case-page">
-        <EvidenceList locale={locale} headingLevel={2} />
+        <div className="section-heading section-heading--split">
+          <div>
+            <Eyebrow>{isSv ? "Arbetet bakom namnen" : "The work behind the names"}</Eyebrow>
+            <h2>{isSv ? "Relationer vi kan visa." : "Relationships we can show."}</h2>
+          </div>
+          <p>
+            {isSv
+              ? "Bilderna och relationerna är offentliga. Vi publicerar inte prestationssiffror utan en tydlig definition, period och godkänd källa."
+              : "The imagery and relationships are public. We do not publish performance figures without a clear definition, period, and approved source."}
+          </p>
+        </div>
+        <EvidenceList locale={locale} headingLevel={2} variant="editorial" />
       </section>
       <section className="evidence-policy">
         <div>
@@ -511,10 +557,20 @@ export function AboutPage({ locale }: { locale: Locale }) {
   return (
     <PageShell locale={locale}>
       <JsonLd data={organizationSchema(locale)} />
-      <section className="page-hero page-hero--about">
-        <Eyebrow>{copy.aboutEyebrow}</Eyebrow>
-        <h1>{copy.aboutTitle}</h1>
-        <p>{copy.aboutIntro}</p>
+      <section className="about-hero">
+        <div className="about-hero__title">
+          <Eyebrow>{copy.aboutEyebrow}</Eyebrow>
+          <h1>{copy.aboutTitle}</h1>
+        </div>
+        <div className="about-hero__aside">
+          <span aria-hidden="true">04</span>
+          <p>{copy.aboutIntro}</p>
+          <p>
+            {isSv
+              ? "Ett kärnteam nära beslut, genomförande och kund."
+              : "A core team close to decisions, delivery, and the client."}
+          </p>
+        </div>
       </section>
       <section className="about-manifesto">
         <p>{isSv ? "Vår utgångspunkt" : "Our starting point"}</p>
@@ -544,10 +600,21 @@ export function AboutPage({ locale }: { locale: Locale }) {
         <div className="team-list">
           {team.map((person, index) => (
             <article key={person.name}>
-              <span>0{index + 1}</span>
-              <h3>{person.name}</h3>
-              <p>{person.role[locale]}</p>
-              <p>{person.focus[locale]}</p>
+              <div className="team-list__portrait">
+                <Image
+                  src={person.image}
+                  alt={person.imageAlt[locale]}
+                  width={900}
+                  height={1125}
+                  sizes="(min-width: 64rem) 23vw, (min-width: 40rem) 46vw, 42vw"
+                />
+                <span aria-hidden="true">0{index + 1}</span>
+              </div>
+              <div className="team-list__copy">
+                <h3>{person.name}</h3>
+                <p>{person.role[locale]}</p>
+                <p>{person.focus[locale]}</p>
+              </div>
             </article>
           ))}
         </div>
