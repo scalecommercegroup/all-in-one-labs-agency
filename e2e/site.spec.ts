@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test("Swedish homepage presents the five-service system", async ({ page }) => {
+test("Swedish homepage presents the six-service system", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
@@ -16,7 +16,39 @@ test("Swedish homepage presents the five-service system", async ({ page }) => {
   await expect(
     services.getByRole("heading", { level: 3, name: "AEO" }),
   ).toBeVisible();
+  await expect(
+    services.getByRole("heading", {
+      level: 3,
+      name: "Flerspråkig e-handel",
+    }),
+  ).toBeVisible();
   await expect(page.getByText("Illustrerade exempelflöden.")).toBeVisible();
+});
+
+test("multilingual ecommerce section explains the Q4 path without a guarantee", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "En fungerande butik. Fler sökbara marknader.",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText(/en av de snabbaste Q4-vägarna/)).toBeVisible();
+
+  await page
+    .getByRole("link", { name: /Utforska flerspråkig e-handel/ })
+    .click();
+  await expect(page).toHaveURL(/\/tjanster\/flersprakig-ehandel\/?$/);
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Gör en fungerande butik sökbar på fler marknader.",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Inga garantier om placeringar")).toBeVisible();
 });
 
 test("homepage chatbot demonstrates sales and support without a voice panel", async ({

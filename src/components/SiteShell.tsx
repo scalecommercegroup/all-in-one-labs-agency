@@ -272,6 +272,11 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <a href={getRoute("service:voice", locale)}>
             {locale === "sv" ? "AI-telefonister" : "AI voice agents"}
           </a>
+          <a href={getRoute("service:localization", locale)}>
+            {locale === "sv"
+              ? "Flerspråkig e-handel"
+              : "Multilingual ecommerce"}
+          </a>
         </FooterDisclosure>
         <div className="footer-group footer-group--legal">
           <p className="footer-label">ScaleCommerce Group AB</p>

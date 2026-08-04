@@ -6,6 +6,7 @@ export const serviceOptions = [
   "websites",
   "chatbots",
   "voice",
+  "localization",
   "unsure",
 ] as const;
 

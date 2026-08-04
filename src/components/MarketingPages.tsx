@@ -192,6 +192,108 @@ function ClosingCta({
   );
 }
 
+function MarketExpansion({ locale }: { locale: Locale }) {
+  const isSv = locale === "sv";
+  const steps = isSv
+    ? [
+        ["01", "Marknad", "Efterfrågan och operativ beredskap"],
+        ["02", "Lokalisering", "Språk, köplogik och produktfakta"],
+        ["03", "SEO + AEO", "Sökintention, svar och teknisk struktur"],
+        ["04", "Granskning", "Mänsklig QA före kontrollerad lansering"],
+      ]
+    : [
+        ["01", "Market", "Demand and operational readiness"],
+        ["02", "Localisation", "Language, buying logic, and product truth"],
+        ["03", "SEO + AEO", "Search intent, answers, and technical structure"],
+        ["04", "Review", "Human QA before a controlled launch"],
+      ];
+
+  return (
+    <section className="market-expansion">
+      <div className="market-expansion__copy">
+        <Eyebrow>
+          {isSv
+            ? "Flerspråkig e-handel · Q4"
+            : "Multilingual ecommerce · Q4"}
+        </Eyebrow>
+        <h2>
+          {protectHeadingTokens(
+            isSv
+              ? "En fungerande butik. Fler sökbara marknader."
+              : "One proven store. More discoverable markets.",
+          )}
+        </h2>
+        <p>
+          {isSv
+            ? "För e-handelsvarumärken med bevisade produkter och befintlig efterfrågan kan lokalisering vara en av de snabbaste Q4-vägarna till ny försäljningspotential utanför CRO. Vi anpassar hela butikens språk, sökintention och kunskapsyta—inte bara orden."
+            : "For ecommerce brands with proven products and existing demand, localisation can be one of the fastest Q4 paths to new sales potential outside CRO. We adapt the store’s language, search intent, and knowledge surface—not only the words."}
+        </p>
+        <a
+          className="text-link"
+          href={getRoute("service:localization", locale)}
+        >
+          {isSv
+            ? "Utforska flerspråkig e-handel"
+            : "Explore multilingual ecommerce"}
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div
+        className="market-expansion__map"
+        role="group"
+        aria-label={
+          isSv
+            ? "Exempel på arbetsflöde från källbutik till flera lokaliserade marknader"
+            : "Example workflow from one source store to multiple localised markets"
+        }
+      >
+        <div className="market-expansion__map-header">
+          <span>{isSv ? "Marknadsrouter" : "Market router"}</span>
+          <span>LAB / 06</span>
+        </div>
+        <div className="market-expansion__source">
+          <span>{isSv ? "Källbutik" : "Source store"}</span>
+          <h3>
+            {isSv
+              ? "Ett godkänt kommersiellt original"
+              : "One approved commercial source"}
+          </h3>
+          <p>
+            {isSv
+              ? "Produkter · erbjudande · tonalitet · bevis"
+              : "Products · offer · tone · evidence"}
+          </p>
+        </div>
+        <ol className="market-expansion__steps">
+          {steps.map(([number, title, text]) => (
+            <li key={number}>
+              <span>{number}</span>
+              <div>
+                <strong>{title}</strong>
+                <p>{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="market-expansion__outputs">
+          <p>{isSv ? "Exempel på språkspår" : "Example language routes"}</p>
+          <ul aria-label={isSv ? "Exempelspråk" : "Example languages"}>
+            {["EN", "DE", "FR", "NL"].map((language) => (
+              <li key={language}>{language}</li>
+            ))}
+          </ul>
+          <span>
+            {isSv
+              ? "Varje marknad får egen sökintention, copy och kvalitetsspärr."
+              : "Each market gets its own search intent, copy, and quality gate."}
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HomePage({ locale }: { locale: Locale }) {
   const copy = homeCopy[locale];
   const common = commonCopy[locale];
@@ -236,6 +338,8 @@ export function HomePage({ locale }: { locale: Locale }) {
         </div>
         <ServiceLedger locale={locale} />
       </section>
+
+      <MarketExpansion locale={locale} />
 
       <section className="systems-section">
         <div className="systems-section__intro">
@@ -712,8 +816,8 @@ export function ContactPage({ locale }: { locale: Locale }) {
           </p>
           <p className="contact-form-section__qualification">
             {isSv
-              ? "Före start får ni skriftlig omfattning, beroenden, ansvar, supportupplägg och pris."
-              : "Before work starts, you receive written scope, dependencies, ownership, support model, and price."}
+              ? "Före start får ni skriftlig omfattning, beroenden, ansvar och supportupplägg."
+              : "Before work starts, you receive written scope, dependencies, ownership, and support model."}
           </p>
         </div>
         {siteConfig.contactFormEnabled ? (
