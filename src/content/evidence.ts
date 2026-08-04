@@ -3,6 +3,8 @@ import type { Locale, Localized } from "@/content/site";
 export interface EvidenceRecord {
   id: string;
   brand: string;
+  image: string;
+  imageAlt: Localized<string>;
   services: Localized<string[]>;
   summary: Localized<string>;
   source: string;
@@ -15,6 +17,11 @@ export const evidenceRecords: EvidenceRecord[] = [
   {
     id: "keauty",
     brand: "Keauty",
+    image: "/cases/keauty.webp",
+    imageAlt: {
+      sv: "Porträttbild från Keautys varumärkesmaterial.",
+      en: "Portrait from Keauty's brand material.",
+    },
     services: {
       sv: ["Webb", "E-post", "Tillväxt"],
       en: ["Web", "Email", "Growth"],
@@ -31,6 +38,11 @@ export const evidenceRecords: EvidenceRecord[] = [
   {
     id: "vanil-a-bean",
     brand: "Vanil A Bean",
+    image: "/cases/vanil-a-bean.webp",
+    imageAlt: {
+      sv: "Vanil A Beans doftprodukter arrangerade på ett bord.",
+      en: "Vanil A Bean fragrance products arranged on a table.",
+    },
     services: {
       sv: ["Webb", "Retention"],
       en: ["Web", "Retention"],
@@ -47,6 +59,11 @@ export const evidenceRecords: EvidenceRecord[] = [
   {
     id: "telling-stories",
     brand: "Telling Stories",
+    image: "/cases/telling-stories.webp",
+    imageAlt: {
+      sv: "Interiör från Telling Stories butik.",
+      en: "Interior from the Telling Stories store.",
+    },
     services: {
       sv: ["Performance", "Kundanskaffning"],
       en: ["Performance", "Acquisition"],
@@ -63,6 +80,11 @@ export const evidenceRecords: EvidenceRecord[] = [
   {
     id: "barkalot",
     brand: "Barkalot",
+    image: "/cases/barkalot.webp",
+    imageAlt: {
+      sv: "Hund i Barkalots varumärkesmaterial.",
+      en: "Dog featured in Barkalot's brand material.",
+    },
     services: {
       sv: ["Shopify", "Webb"],
       en: ["Shopify", "Web"],
@@ -81,6 +103,7 @@ export const evidenceRecords: EvidenceRecord[] = [
 export function getEvidence(locale: Locale) {
   return evidenceRecords.map((record) => ({
     ...record,
+    imageAlt: record.imageAlt[locale],
     services: record.services[locale],
     summary: record.summary[locale],
   }));

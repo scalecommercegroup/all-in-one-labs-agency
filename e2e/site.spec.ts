@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test("Swedish homepage presents the five-service system", async ({ page }) => {
+test("Swedish homepage presents the six-service system", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
@@ -9,9 +9,93 @@ test("Swedish homepage presents the five-service system", async ({ page }) => {
       name: "Synlighet. System. Tillväxt.",
     }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "SEO", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "AEO", exact: true })).toBeVisible();
+  const services = page.locator(".service-ledger");
+  await expect(
+    services.getByRole("heading", { level: 3, name: "SEO" }),
+  ).toBeVisible();
+  await expect(
+    services.getByRole("heading", { level: 3, name: "AEO" }),
+  ).toBeVisible();
+  await expect(
+    services.getByRole("heading", {
+      level: 3,
+      name: "Flerspråkig e-handel",
+    }),
+  ).toBeVisible();
   await expect(page.getByText("Illustrerade exempelflöden.")).toBeVisible();
+});
+
+test("multilingual ecommerce section explains the Q4 path without a guarantee", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "En fungerande butik. Fler sökbara marknader.",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText(/en av de snabbaste Q4-vägarna/)).toBeVisible();
+
+  await page
+    .getByRole("link", { name: /Utforska flerspråkig e-handel/ })
+    .click();
+  await expect(page).toHaveURL(/\/tjanster\/flersprakig-ehandel\/?$/);
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Gör en fungerande butik sökbar på fler marknader.",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Inga garantier om placeringar")).toBeVisible();
+});
+
+test("homepage chatbot demonstrates sales and support without a voice panel", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const showcase = page.locator(".chatbot-showcase");
+
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "En chatt som gör jobbet — inte bara svarar.",
+    }),
+  ).toBeVisible();
+  await expect(showcase.getByRole("tab")).toHaveCount(4);
+  await expect(page.getByText("Exempelflöde · Inkommande samtal")).toHaveCount(
+    0,
+  );
+
+  await showcase.getByRole("tab", { name: /Kundsupport/ }).click();
+  await expect(showcase.getByText("Var är min beställning #10428?")).toBeVisible();
+  await expect(showcase.getByText("Svar direkt · ärende skapat")).toBeVisible();
+});
+
+test("homepage globe renders locally and supports horizontal drag", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const globe = page.getByRole("img", { name: "Roterande jordglob" });
+
+  await expect(globe).toHaveAttribute("data-globe-ready", "true");
+  await expect(globe.locator("canvas")).toBeVisible();
+  await globe.scrollIntoViewIfNeeded();
+
+  const box = await globe.boundingBox();
+  expect(box).not.toBeNull();
+
+  if (box) {
+    const startX = box.x + box.width * 0.7;
+    const y = box.y + box.height * 0.5;
+    await page.mouse.move(startX, y);
+    await page.mouse.down();
+    await expect(globe).toHaveClass(/is-dragging/);
+    await page.mouse.move(startX - box.width * 0.25, y);
+    await page.mouse.up();
+    await expect(globe).not.toHaveClass(/is-dragging/);
+  }
 });
 
 test("language switch preserves the page concept", async ({ page }, testInfo) => {
@@ -38,12 +122,9 @@ test("mobile navigation exposes all primary destinations", async ({
   await page.goto("/");
   await page.getByText("Meny", { exact: true }).click();
   await expect(page.getByRole("navigation", { name: "Mobilmeny" })).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Tjänster", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Kontakt", exact: true }),
-  ).toBeVisible();
+  const navigation = page.getByRole("navigation", { name: "Mobilmeny" });
+  await expect(navigation.getByRole("link", { name: /Tjänster$/ })).toBeVisible();
+  await expect(navigation.getByRole("link", { name: /Kontakt$/ })).toBeVisible();
 
   await expect
     .poll(() =>
@@ -152,4 +233,42 @@ test("service detail has no automatically detectable accessibility violations", 
     .exclude(".cf-turnstile")
     .analyze();
   expect(results.violations).toEqual([]);
+});
+
+test("case and team pages present the public proof visually", async ({ page }) => {
+  await page.goto("/case");
+  await expect(
+    page.getByRole("img", { name: "Porträttbild från Keautys varumärkesmaterial." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Barkalot" }),
+  ).toBeVisible();
+
+  await page.goto("/om-oss");
+  await expect(
+    page.getByRole("img", { name: "Porträtt av Hugo Idrén." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: "Porträtt av Algot Salmi." }),
+  ).toBeVisible();
+});
+
+test("footer navigation is compact on mobile and expanded on desktop", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/");
+  const company = page
+    .locator(".footer-group--collapsible")
+    .filter({ hasText: "Företag" });
+
+  if (testInfo.project.name.includes("mobile")) {
+    await expect(company).not.toHaveAttribute("open", "");
+    await company.locator("summary").click();
+  } else {
+    await expect(company).toHaveAttribute("open", "");
+  }
+
+  await expect(
+    company.getByRole("link", { name: "Integritet" }),
+  ).toBeVisible();
 });

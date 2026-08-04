@@ -18,14 +18,15 @@ const staticMeta: Record<
 > = {
   services: {
     sv: {
-      title: "SEO, AEO, webbplatser och AI-agenter | All-in-One Labs",
+      title: "SEO, AEO, webb, AI och flerspråkig e-handel | All-in-One Labs",
       description:
-        "Fem sammanhängande tjänster för svenska företag: SEO, AEO, webbutveckling, AI-chattbotar och AI-telefonister.",
+        "Sex sammanhängande tjänster: SEO, AEO, webbutveckling, AI-chattbotar, AI-telefonister och flerspråkig e-handel.",
     },
     en: {
-      title: "SEO, AEO, websites, and AI agents | All-in-One Labs",
+      title:
+        "SEO, AEO, websites, AI, and multilingual ecommerce | All-in-One Labs",
       description:
-        "Five connected services for Swedish companies: SEO, AEO, website development, AI chatbots, and AI voice agents.",
+        "Six connected services: SEO, AEO, website development, AI chatbots, AI voice agents, and multilingual ecommerce.",
     },
   },
   cases: {
@@ -80,14 +81,15 @@ const staticMeta: Record<
 
 const homeMeta = {
   sv: {
-    title: "All-in-One Labs | SEO, AEO, webbplatser och AI-agenter",
+    title: "All-in-One Labs | SEO, AEO, webb, AI och flerspråkig e-handel",
     description:
-      "Tillväxtsystem för svenska företag: SEO, AEO, webbplatser, AI-chattbotar och transparenta AI-telefonister.",
+      "Tillväxtsystem för svenska företag: SEO, AEO, webbplatser, AI-agenter och flerspråkig e-handel.",
   },
   en: {
-    title: "All-in-One Labs | SEO, AEO, websites, and AI agents",
+    title:
+      "All-in-One Labs | SEO, AEO, websites, AI, and multilingual ecommerce",
     description:
-      "Growth systems for Swedish companies: SEO, AEO, websites, AI chatbots, and transparent AI voice agents.",
+      "Growth systems for Swedish companies: SEO, AEO, websites, AI agents, and multilingual ecommerce.",
   },
 };
 

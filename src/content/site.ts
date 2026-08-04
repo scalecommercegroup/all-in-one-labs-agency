@@ -4,7 +4,8 @@ export type ServiceKey =
   | "aeo"
   | "websites"
   | "chatbots"
-  | "voice";
+  | "voice"
+  | "localization";
 
 export type Localized<T> = Record<Locale, T>;
 
@@ -55,8 +56,6 @@ export const siteConfig = {
   email: "elliot@theaioecom.com",
   phoneDisplay: "+46 70 880 27 56",
   phoneHref: "+46708802756",
-  linkedIn: "https://www.linkedin.com/company/all-in-one-ecom/",
-  instagram: "https://www.instagram.com/all_in_one_ecom/",
 } as const;
 
 export const services: ServiceDefinition[] = [
@@ -880,6 +879,186 @@ export const services: ServiceDefinition[] = [
       },
     },
   },
+  {
+    key: "localization",
+    index: "06",
+    copy: {
+      sv: {
+        slug: "flersprakig-ehandel",
+        navLabel: "Flerspråkig e-handel",
+        eyebrow: "Marknadsexpansion för e-handel",
+        title: "Gör en fungerande butik sökbar på fler marknader.",
+        intro:
+          "Vi översätter och marknadsanpassar e-handelsbutiker för utvalda språk, lokal sökintention och AI-baserade sökupplevelser—utan att tappa produktfakta, tonalitet eller kontroll.",
+        promise:
+          "En lokal köpupplevelse med rätt språk, teknisk sökstruktur och tydliga svar som både kunder och söksystem kan förstå.",
+        idealFor: [
+          "E-handelsvarumärken med bevisade produkter och efterfrågan på hemmamarknaden",
+          "Team som vill öppna en eller flera nya marknader inför Q4",
+          "Butiker med maskinöversatt innehåll men svag lokal synlighet eller tonalitet",
+          "Shopify- och e-handelsteam som behöver en kontrollerad marknadslansering",
+        ],
+        deliverables: [
+          "Marknads- och språkprioritering utifrån efterfrågan och operativ beredskap",
+          "Källcopy, terminologi och kontrollerad översättningsprocess",
+          "Lokalisering av navigation, produkt-, kategori- och hjälpinnehåll",
+          "Lokal sökintention, metadata och internlänkning",
+          "Språk- och URL-struktur med hreflang-, canonical- och indexeringskontroll",
+          "Källförankrade svar och produktfakta för klassisk sök och AI-baserade sökupplevelser",
+          "Mänsklig språk-, handels- och lanseringsgranskning",
+        ],
+        process: [
+          {
+            title: "Prioritera marknaden",
+            text: "Vi väljer språk och marknad efter befintlig efterfrågan, sortiment, leveransförmåga och supportberedskap.",
+          },
+          {
+            title: "Bygg språkgrunden",
+            text: "Källcopy, ordlista, tonalitet och teknisk språkstruktur låses innan innehållet skalas.",
+          },
+          {
+            title: "Lokalisera och optimera",
+            text: "Butiken anpassas efter lokal köplogik, sökintention och frågor—inte bara ord för ord.",
+          },
+          {
+            title: "Granska och lansera",
+            text: "Språk, länkar, produktfakta, indexering och kritiska köpflöden testas före en kontrollerad publicering.",
+          },
+        ],
+        boundaries: [
+          "Ingen rå maskinöversättning publiceras utan mänsklig granskning",
+          "Inga garantier om placeringar, AI-citeringar eller försäljning",
+          "Ingen marknad lanseras innan sortiment, leverans, support och kundinformation fungerar lokalt",
+        ],
+        timeline:
+          "Vi börjar med en pilotmarknad. Nästa språk öppnas först när innehåll, teknik och köpupplevelse har klarat granskningen.",
+        measures: [
+          "Kvalificerad organisk efterfrågan per språk och marknad",
+          "Indexering, hreflang och synlighet för prioriterade sidor",
+          "Engagemang och konvertering från lokaliserad trafik",
+          "Frågor, avhopp och supportfriktion per språk",
+        ],
+        faqs: [
+          {
+            question: "Är det här bara översättning?",
+            answer:
+              "Nej. Översättning byter språk. Lokalisering anpassar även sökintention, erbjudande, produktfakta, navigering, tonalitet och teknisk språkstruktur till marknaden.",
+          },
+          {
+            question: "Kan ni arbeta i Shopify?",
+            answer:
+              "Ja. Vi kan arbeta med Shopify Markets, butikens språkversioner och befintliga översättningsflöden. Exakt upplägg beror på tema, appar, marknadsstruktur och hur innehållet förvaltas.",
+          },
+          {
+            question: "Hur arbetar ni med SEO och AEO på varje språk?",
+            answer:
+              "Vi kartlägger lokal sökintention, gör viktiga sidor indexerbara och internt länkade, och strukturerar tydliga produktfakta och svar. AEO bygger på samma tekniska och innehållsmässiga grund som seriös SEO—det finns ingen särskild genväg till AI-svar.",
+          },
+          {
+            question: "Är detta en snabb Q4-åtgärd?",
+            answer:
+              "För varumärken med bevisade produkter, befintlig efterfrågan och operativ beredskap kan en pilotmarknad vara en av de snabbaste Q4-vägarna till ny försäljningspotential utanför CRO. Det är inte samma sak som en garanti; marknadsval, indexering och lokal köpupplevelse avgör utfallet.",
+          },
+          {
+            question: "Vilket språk bör vi börja med?",
+            answer:
+              "Det avgörs av efterfrågan, konkurrens, sortiment, leverans, support och varumärkets befintliga signaler—inte av marknadens storlek ensam.",
+          },
+        ],
+        metaTitle:
+          "Flerspråkig e-handel, internationell SEO och AEO | All-in-One Labs",
+        metaDescription:
+          "Lokalisera e-handelsbutiken för nya språk och marknader med lokal SEO, AEO, teknisk språkstruktur och mänsklig kvalitetsgranskning.",
+      },
+      en: {
+        slug: "multilingual-ecommerce",
+        navLabel: "Multilingual ecommerce",
+        eyebrow: "Ecommerce market expansion",
+        title: "Make a proven store discoverable in more markets.",
+        intro:
+          "We translate and localise ecommerce stores for selected languages, local search intent, and AI-powered search experiences—without losing product truth, tone, or control.",
+        promise:
+          "A local buying experience with the right language, technical search structure, and clear answers that customers and search systems can understand.",
+        idealFor: [
+          "Ecommerce brands with proven products and home-market demand",
+          "Teams preparing to enter one or more new markets before Q4",
+          "Stores with machine-translated content but weak local visibility or tone",
+          "Shopify and ecommerce teams needing a controlled market launch",
+        ],
+        deliverables: [
+          "Market and language prioritisation based on demand and operational readiness",
+          "Source copy, terminology, and a controlled translation workflow",
+          "Localisation of navigation, product, collection, and help content",
+          "Local search intent, metadata, and internal linking",
+          "Language and URL architecture with hreflang, canonical, and indexation checks",
+          "Source-backed answers and product facts for classic and AI-powered search",
+          "Human language, commerce, and launch review",
+        ],
+        process: [
+          {
+            title: "Prioritise the market",
+            text: "We select the language and market based on existing demand, catalogue fit, delivery capability, and support readiness.",
+          },
+          {
+            title: "Build the language foundation",
+            text: "Source copy, glossary, tone, and technical language architecture are agreed before content scales.",
+          },
+          {
+            title: "Localise and optimise",
+            text: "The store is adapted to local buying logic, search intent, and questions—not translated word for word.",
+          },
+          {
+            title: "Review and launch",
+            text: "Language, links, product facts, indexation, and critical buying journeys are tested before a controlled release.",
+          },
+        ],
+        boundaries: [
+          "No raw machine translation is published without human review",
+          "No guarantees of rankings, AI citations, or sales",
+          "No market is launched before catalogue, delivery, support, and customer information work locally",
+        ],
+        timeline:
+          "We start with one pilot market. The next language opens only after the content, technology, and buying experience pass review.",
+        measures: [
+          "Qualified organic demand by language and market",
+          "Indexation, hreflang, and visibility for priority pages",
+          "Engagement and conversion from localised traffic",
+          "Questions, drop-off, and support friction by language",
+        ],
+        faqs: [
+          {
+            question: "Is this only translation?",
+            answer:
+              "No. Translation changes the language. Localisation also adapts search intent, offer, product facts, navigation, tone, and technical language architecture to the market.",
+          },
+          {
+            question: "Can you work in Shopify?",
+            answer:
+              "Yes. We can work with Shopify Markets, store languages, and existing translation workflows. The exact setup depends on the theme, apps, market structure, and content ownership.",
+          },
+          {
+            question: "How do you approach SEO and AEO in each language?",
+            answer:
+              "We map local search intent, make important pages indexable and internally linked, and structure clear product facts and answers. AEO relies on the same technical and content foundations as serious SEO—there is no separate shortcut into AI answers.",
+          },
+          {
+            question: "Is this a fast Q4 initiative?",
+            answer:
+              "For brands with proven products, existing demand, and operational readiness, a pilot market can be one of the fastest Q4 paths to new sales potential outside CRO. That is not a guarantee; market choice, indexation, and the local buying experience determine the outcome.",
+          },
+          {
+            question: "Which language should we start with?",
+            answer:
+              "That depends on demand, competition, catalogue fit, delivery, support, and the brand’s existing signals—not market size alone.",
+          },
+        ],
+        metaTitle:
+          "Multilingual ecommerce, international SEO and AEO | All-in-One Labs",
+        metaDescription:
+          "Localise your ecommerce store for new languages and markets with local SEO, AEO, technical language architecture, and human quality review.",
+      },
+    },
+  },
 ];
 
 export const homeCopy = {
@@ -887,10 +1066,10 @@ export const homeCopy = {
     eyebrow: "Tillväxtsystem för svenska företag",
     title: "Synlighet. System. Tillväxt.",
     intro:
-      "Vi bygger SEO, Answer Engine Optimization (AEO), webbplatser och AI-agenter som skapar fler kvalificerade affärer och mindre manuellt arbete.",
+      "Vi bygger SEO, Answer Engine Optimization (AEO), webbplatser, AI-agenter och flerspråkig e-handel som skapar fler kvalificerade affärer och mindre manuellt arbete.",
     primaryCta: "Boka en kostnadsfri analys",
     secondaryCta: "Utforska våra tjänster",
-    serviceTitle: "Fem discipliner. Ett sammanhängande system.",
+    serviceTitle: "Sex discipliner. Ett sammanhängande system.",
     serviceIntro:
       "En stark webbplats utan synlighet står tom. Trafik utan tydlig konvertering blir dyr. Automation utan kontroll skapar risk. Vi kopplar ihop helheten.",
     problemTitle: "Tekniken är sällan problemet i sig.",
@@ -909,10 +1088,10 @@ export const homeCopy = {
     eyebrow: "Growth systems for Swedish companies",
     title: "Visibility. Systems. Growth.",
     intro:
-      "We build SEO, Answer Engine Optimization (AEO), websites, and AI agents that create more qualified business and less manual work.",
+      "We build SEO, Answer Engine Optimization (AEO), websites, AI agents, and multilingual ecommerce that create more qualified business and less manual work.",
     primaryCta: "Book a free assessment",
     secondaryCta: "Explore our services",
-    serviceTitle: "Five disciplines. One connected system.",
+    serviceTitle: "Six disciplines. One connected system.",
     serviceIntro:
       "A strong website without visibility stands empty. Traffic without conversion becomes expensive. Automation without control creates risk. We connect the whole system.",
     problemTitle: "Technology is rarely the problem by itself.",
@@ -989,6 +1168,11 @@ export const commonCopy = {
 export const team = [
   {
     name: "Hugo Idrén",
+    image: "/team/hugo-idren.webp",
+    imageAlt: {
+      sv: "Porträtt av Hugo Idrén.",
+      en: "Portrait of Hugo Idrén.",
+    },
     role: { sv: "VD", en: "CEO" },
     focus: {
       sv: "Kommersiell riktning och partnerskap",
@@ -997,6 +1181,11 @@ export const team = [
   },
   {
     name: "Elliot Lyrberg",
+    image: "/team/elliot-lyrberg.webp",
+    imageAlt: {
+      sv: "Porträtt av Elliot Lyrberg.",
+      en: "Portrait of Elliot Lyrberg.",
+    },
     role: { sv: "Medgrundare", en: "Co-founder" },
     focus: {
       sv: "Tillväxtsystem, webb och kunddialog",
@@ -1005,6 +1194,11 @@ export const team = [
   },
   {
     name: "Vincent Wånehed",
+    image: "/team/vincent-wanehed.webp",
+    imageAlt: {
+      sv: "Porträtt av Vincent Wånehed.",
+      en: "Portrait of Vincent Wånehed.",
+    },
     role: { sv: "Kundansvarig", en: "Account Manager" },
     focus: {
       sv: "Kundbehov och genomförande",
@@ -1013,6 +1207,11 @@ export const team = [
   },
   {
     name: "Algot Salmi",
+    image: "/team/algot-salmi.webp",
+    imageAlt: {
+      sv: "Porträtt av Algot Salmi.",
+      en: "Portrait of Algot Salmi.",
+    },
     role: { sv: "Kundansvarig", en: "Account Manager" },
     focus: {
       sv: "Projektflöde och kundrelation",

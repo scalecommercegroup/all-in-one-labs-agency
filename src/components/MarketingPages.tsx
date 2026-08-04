@@ -1,8 +1,9 @@
 import { ContactForm } from "@/components/ContactForm";
-import { DemoPanels } from "@/components/DemoPanels";
+import { ChatbotShowcase } from "@/components/ChatbotShowcase";
 import { JsonLd } from "@/components/JsonLd";
 import { OrbitGlobe } from "@/components/OrbitGlobe";
 import { PageShell } from "@/components/SiteShell";
+import Image from "next/image";
 import { getEvidence } from "@/content/evidence";
 import { getRoute } from "@/content/routes";
 import {
@@ -29,6 +30,18 @@ function Eyebrow({
   light?: boolean;
 }) {
   return <p className={`eyebrow${light ? " eyebrow--light" : ""}`}>{children}</p>;
+}
+
+function protectHeadingTokens(text: string) {
+  return text.split(/(\s+)/u).map((token, index) =>
+    /\s+/u.test(token) ? (
+      token
+    ) : (
+      <span className="heading-token" key={`${token}-${index}`}>
+        {token}
+      </span>
+    ),
+  );
 }
 
 function BookingLink({
@@ -95,37 +108,57 @@ function ServiceLedger({
 function EvidenceList({
   locale,
   headingLevel = 3,
+  variant = "compact",
 }: {
   locale: Locale;
   headingLevel?: 2 | 3;
+  variant?: "compact" | "editorial";
 }) {
   const evidence = getEvidence(locale);
   return (
-    <div className="evidence-list">
+    <div className={`evidence-list evidence-list--${variant}`}>
       {evidence.map((record, index) => (
         <article className="evidence-row" key={record.id}>
-          <span className="evidence-row__index">0{index + 1}</span>
-          {headingLevel === 2 ? (
-            <h2>{record.brand}</h2>
-          ) : (
-            <h3>{record.brand}</h3>
-          )}
-          <div className="evidence-row__summary">
-            <p>{record.summary}</p>
-            <p className="evidence-row__source">
+          <div className="evidence-row__media">
+            <Image
+              src={record.image}
+              alt={record.imageAlt}
+              width={1200}
+              height={900}
+              sizes={
+                variant === "editorial"
+                  ? "(min-width: 64rem) 46vw, 100vw"
+                  : "(min-width: 64rem) 22vw, (min-width: 40rem) 45vw, 100vw"
+              }
+            />
+            <span aria-hidden="true">0{index + 1}</span>
+          </div>
+          <div className="evidence-row__body">
+            <header>
+              <span className="evidence-row__index">
+                {locale === "sv" ? "Dokumenterat uppdrag" : "Documented engagement"}
+              </span>
+              {headingLevel === 2 ? (
+                <h2>{record.brand}</h2>
+              ) : (
+                <h3>{record.brand}</h3>
+              )}
+            </header>
+            <p className="evidence-row__summary">{record.summary}</p>
+            <ul aria-label={locale === "sv" ? "Områden" : "Areas"}>
+              {record.services.map((service) => (
+                <li key={service}>{service}</li>
+              ))}
+            </ul>
+            <div className="evidence-row__source">
               <a href={record.source} target="_blank" rel="noreferrer">
                 {locale === "sv" ? "Offentlig källa" : "Public source"} ↗
               </a>
               <span>
                 {locale === "sv" ? "Granskad" : "Reviewed"} {record.reviewedAt}
               </span>
-            </p>
+            </div>
           </div>
-          <ul aria-label={locale === "sv" ? "Områden" : "Areas"}>
-            {record.services.map((service) => (
-              <li key={service}>{service}</li>
-            ))}
-          </ul>
         </article>
       ))}
     </div>
@@ -159,6 +192,108 @@ function ClosingCta({
   );
 }
 
+function MarketExpansion({ locale }: { locale: Locale }) {
+  const isSv = locale === "sv";
+  const steps = isSv
+    ? [
+        ["01", "Marknad", "Efterfrågan och operativ beredskap"],
+        ["02", "Lokalisering", "Språk, köplogik och produktfakta"],
+        ["03", "SEO + AEO", "Sökintention, svar och teknisk struktur"],
+        ["04", "Granskning", "Mänsklig QA före kontrollerad lansering"],
+      ]
+    : [
+        ["01", "Market", "Demand and operational readiness"],
+        ["02", "Localisation", "Language, buying logic, and product truth"],
+        ["03", "SEO + AEO", "Search intent, answers, and technical structure"],
+        ["04", "Review", "Human QA before a controlled launch"],
+      ];
+
+  return (
+    <section className="market-expansion">
+      <div className="market-expansion__copy">
+        <Eyebrow>
+          {isSv
+            ? "Flerspråkig e-handel · Q4"
+            : "Multilingual ecommerce · Q4"}
+        </Eyebrow>
+        <h2>
+          {protectHeadingTokens(
+            isSv
+              ? "En fungerande butik. Fler sökbara marknader."
+              : "One proven store. More discoverable markets.",
+          )}
+        </h2>
+        <p>
+          {isSv
+            ? "För e-handelsvarumärken med bevisade produkter och befintlig efterfrågan kan lokalisering vara en av de snabbaste Q4-vägarna till ny försäljningspotential utanför CRO. Vi anpassar hela butikens språk, sökintention och kunskapsyta—inte bara orden."
+            : "For ecommerce brands with proven products and existing demand, localisation can be one of the fastest Q4 paths to new sales potential outside CRO. We adapt the store’s language, search intent, and knowledge surface—not only the words."}
+        </p>
+        <a
+          className="text-link"
+          href={getRoute("service:localization", locale)}
+        >
+          {isSv
+            ? "Utforska flerspråkig e-handel"
+            : "Explore multilingual ecommerce"}
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div
+        className="market-expansion__map"
+        role="group"
+        aria-label={
+          isSv
+            ? "Exempel på arbetsflöde från källbutik till flera lokaliserade marknader"
+            : "Example workflow from one source store to multiple localised markets"
+        }
+      >
+        <div className="market-expansion__map-header">
+          <span>{isSv ? "Marknadsrouter" : "Market router"}</span>
+          <span>LAB / 06</span>
+        </div>
+        <div className="market-expansion__source">
+          <span>{isSv ? "Källbutik" : "Source store"}</span>
+          <h3>
+            {isSv
+              ? "Ett godkänt kommersiellt original"
+              : "One approved commercial source"}
+          </h3>
+          <p>
+            {isSv
+              ? "Produkter · erbjudande · tonalitet · bevis"
+              : "Products · offer · tone · evidence"}
+          </p>
+        </div>
+        <ol className="market-expansion__steps">
+          {steps.map(([number, title, text]) => (
+            <li key={number}>
+              <span>{number}</span>
+              <div>
+                <strong>{title}</strong>
+                <p>{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="market-expansion__outputs">
+          <p>{isSv ? "Exempel på språkspår" : "Example language routes"}</p>
+          <ul aria-label={isSv ? "Exempelspråk" : "Example languages"}>
+            {["EN", "DE", "FR", "NL"].map((language) => (
+              <li key={language}>{language}</li>
+            ))}
+          </ul>
+          <span>
+            {isSv
+              ? "Varje marknad får egen sökintention, copy och kvalitetsspärr."
+              : "Each market gets its own search intent, copy, and quality gate."}
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HomePage({ locale }: { locale: Locale }) {
   const copy = homeCopy[locale];
   const common = commonCopy[locale];
@@ -183,7 +318,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       <section className="hero">
         <div className="hero__copy">
           <Eyebrow>{copy.eyebrow}</Eyebrow>
-          <h1>{copy.title}</h1>
+          <h1>{protectHeadingTokens(copy.title)}</h1>
           <p className="hero__intro">{copy.intro}</p>
           <div className="hero__actions">
             <BookingLink locale={locale} tracking="booking-hero" />
@@ -204,17 +339,27 @@ export function HomePage({ locale }: { locale: Locale }) {
         <ServiceLedger locale={locale} />
       </section>
 
+      <MarketExpansion locale={locale} />
+
       <section className="systems-section">
         <div className="systems-section__intro">
-          <Eyebrow light>{isSv ? "System före hype" : "Systems before hype"}</Eyebrow>
-          <h2>{copy.problemTitle}</h2>
-          <p>{copy.problemBody}</p>
+          <Eyebrow light>{isSv ? "AI-chattbotar" : "AI chatbots"}</Eyebrow>
+          <h2>
+            {isSv
+              ? "En chatt som gör jobbet — inte bara svarar."
+              : "A chat that does the work — not just answers."}
+          </h2>
+          <p>
+            {isSv
+              ? "Labs bygger AI-chattbotar som hjälper till att sälja, avlastar supporten, bokar möten och lämnar över till rätt person med hela kontexten kvar."
+              : "Labs builds AI chatbots that support sales, reduce support workload, book meetings, and hand over to the right person with the full context intact."}
+          </p>
         </div>
-        <DemoPanels locale={locale} />
+        <ChatbotShowcase locale={locale} />
         <p className="demo-disclaimer">
           {isSv
-            ? "Illustrerade exempelflöden. Inte kundresultat eller aktiva produktionstjänster."
-            : "Illustrated example flows. Not client results or active production services."}
+            ? "Illustrerade exempelflöden. Funktioner, svar och integrationer anpassas efter verksamhet, system och risknivå."
+            : "Illustrated example flows. Features, answers, and integrations are adapted to the business, systems, and level of risk."}
         </p>
       </section>
 
@@ -226,7 +371,7 @@ export function HomePage({ locale }: { locale: Locale }) {
           </div>
           <p>{copy.proofBody}</p>
         </div>
-        <EvidenceList locale={locale} />
+        <EvidenceList locale={locale} variant="compact" />
         <a className="text-link text-link--wide" href={getRoute("cases", locale)}>
           {isSv ? "Se hur vi hanterar bevis" : "See how we handle evidence"}
           <span aria-hidden="true">→</span>
@@ -267,7 +412,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
       <JsonLd data={breadcrumbSchema(locale)} />
       <section className="page-hero page-hero--services">
         <Eyebrow>{copy.servicesEyebrow}</Eyebrow>
-        <h1>{copy.servicesTitle}</h1>
+        <h1>{protectHeadingTokens(copy.servicesTitle)}</h1>
         <p>{copy.servicesIntro}</p>
       </section>
       <section className="section section--service-directory">
@@ -318,7 +463,7 @@ export function ServicePage({
       <section className="service-hero">
         <div>
           <Eyebrow>{copy.eyebrow}</Eyebrow>
-          <h1>{copy.title}</h1>
+          <h1>{protectHeadingTokens(copy.title)}</h1>
         </div>
         <div className="service-hero__aside">
           <p>{copy.intro}</p>
@@ -451,13 +596,38 @@ export function CasesPage({ locale }: { locale: Locale }) {
 
   return (
     <PageShell locale={locale}>
-      <section className="page-hero">
-        <Eyebrow>{copy.casesEyebrow}</Eyebrow>
-        <h1>{copy.casesTitle}</h1>
-        <p>{copy.casesIntro}</p>
+      <section className="case-hero">
+        <div className="case-hero__title">
+          <Eyebrow>{copy.casesEyebrow}</Eyebrow>
+          <h1>{protectHeadingTokens(copy.casesTitle)}</h1>
+        </div>
+        <div className="case-hero__aside">
+          <p>{copy.casesIntro}</p>
+          <dl>
+            <div>
+              <dt>{isSv ? "Offentliga referenser" : "Public references"}</dt>
+              <dd>04</dd>
+            </div>
+            <div>
+              <dt>{isSv ? "Vår standard" : "Our standard"}</dt>
+              <dd>{isSv ? "Källa · scope · datum" : "Source · scope · date"}</dd>
+            </div>
+          </dl>
+        </div>
       </section>
       <section className="section section--case-page">
-        <EvidenceList locale={locale} headingLevel={2} />
+        <div className="section-heading section-heading--split">
+          <div>
+            <Eyebrow>{isSv ? "Arbetet bakom namnen" : "The work behind the names"}</Eyebrow>
+            <h2>{isSv ? "Relationer vi kan visa." : "Relationships we can show."}</h2>
+          </div>
+          <p>
+            {isSv
+              ? "Bilderna och relationerna är offentliga. Vi publicerar inte prestationssiffror utan en tydlig definition, period och godkänd källa."
+              : "The imagery and relationships are public. We do not publish performance figures without a clear definition, period, and approved source."}
+          </p>
+        </div>
+        <EvidenceList locale={locale} headingLevel={2} variant="editorial" />
       </section>
       <section className="evidence-policy">
         <div>
@@ -511,10 +681,20 @@ export function AboutPage({ locale }: { locale: Locale }) {
   return (
     <PageShell locale={locale}>
       <JsonLd data={organizationSchema(locale)} />
-      <section className="page-hero page-hero--about">
-        <Eyebrow>{copy.aboutEyebrow}</Eyebrow>
-        <h1>{copy.aboutTitle}</h1>
-        <p>{copy.aboutIntro}</p>
+      <section className="about-hero">
+        <div className="about-hero__title">
+          <Eyebrow>{copy.aboutEyebrow}</Eyebrow>
+          <h1>{protectHeadingTokens(copy.aboutTitle)}</h1>
+        </div>
+        <div className="about-hero__aside">
+          <span aria-hidden="true">04</span>
+          <p>{copy.aboutIntro}</p>
+          <p>
+            {isSv
+              ? "Ett kärnteam nära beslut, genomförande och kund."
+              : "A core team close to decisions, delivery, and the client."}
+          </p>
+        </div>
       </section>
       <section className="about-manifesto">
         <p>{isSv ? "Vår utgångspunkt" : "Our starting point"}</p>
@@ -544,10 +724,21 @@ export function AboutPage({ locale }: { locale: Locale }) {
         <div className="team-list">
           {team.map((person, index) => (
             <article key={person.name}>
-              <span>0{index + 1}</span>
-              <h3>{person.name}</h3>
-              <p>{person.role[locale]}</p>
-              <p>{person.focus[locale]}</p>
+              <div className="team-list__portrait">
+                <Image
+                  src={person.image}
+                  alt={person.imageAlt[locale]}
+                  width={900}
+                  height={1125}
+                  sizes="(min-width: 64rem) 23vw, (min-width: 40rem) 46vw, 42vw"
+                />
+                <span aria-hidden="true">0{index + 1}</span>
+              </div>
+              <div className="team-list__copy">
+                <h3>{person.name}</h3>
+                <p>{person.role[locale]}</p>
+                <p>{person.focus[locale]}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -600,7 +791,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
       <section className="contact-hero">
         <div>
           <Eyebrow>{copy.contactEyebrow}</Eyebrow>
-          <h1>{copy.contactTitle}</h1>
+          <h1>{protectHeadingTokens(copy.contactTitle)}</h1>
           <p>{copy.contactIntro}</p>
         </div>
         <div className="contact-hero__direct">
@@ -625,8 +816,8 @@ export function ContactPage({ locale }: { locale: Locale }) {
           </p>
           <p className="contact-form-section__qualification">
             {isSv
-              ? "Före start får ni skriftlig omfattning, beroenden, ansvar, supportupplägg och pris."
-              : "Before work starts, you receive written scope, dependencies, ownership, support model, and price."}
+              ? "Före start får ni skriftlig omfattning, beroenden, ansvar och supportupplägg."
+              : "Before work starts, you receive written scope, dependencies, ownership, and support model."}
           </p>
         </div>
         {siteConfig.contactFormEnabled ? (
@@ -688,7 +879,7 @@ export function PrivacyPage({ locale }: { locale: Locale }) {
     <PageShell locale={locale}>
       <section className="page-hero page-hero--legal">
         <Eyebrow>{copy.privacyEyebrow}</Eyebrow>
-        <h1>{copy.privacyTitle}</h1>
+        <h1>{protectHeadingTokens(copy.privacyTitle)}</h1>
         <p>
           {isSv
             ? "Senast granskad 28 juli 2026. Policyn beskriver den publika webbplatsen – inte alla framtida kundlösningar."

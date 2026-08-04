@@ -21,6 +21,7 @@ const serviceLabels = {
     websites: "Webbplats",
     chatbots: "AI-chattbot",
     voice: "AI-telefonist",
+    localization: "Flerspråkig e-handel",
     unsure: "Osäker — hjälp mig prioritera",
   },
   en: {
@@ -29,6 +30,7 @@ const serviceLabels = {
     websites: "Website",
     chatbots: "AI chatbot",
     voice: "AI voice agent",
+    localization: "Multilingual ecommerce",
     unsure: "Not sure — help me prioritise",
   },
 };

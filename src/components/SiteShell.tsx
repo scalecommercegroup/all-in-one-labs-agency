@@ -113,7 +113,7 @@ export function SiteHeader() {
         href={getRoute("home", locale)}
         aria-label={siteConfig.name}
       >
-        <BrandMark />
+        <BrandMark inverse />
       </a>
 
       <nav className="desktop-nav" aria-label={locale === "sv" ? "Huvudmeny" : "Main navigation"}>
@@ -135,7 +135,7 @@ export function SiteHeader() {
           {copy.language}
         </a>
         <a
-          className="button button--dark button--header"
+          className="button button--light button--header"
           href={siteConfig.bookingUrl}
           target="_blank"
           rel="noreferrer"
@@ -187,6 +187,40 @@ export function SiteHeader() {
   );
 }
 
+function FooterDisclosure({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const mobileViewport = window.matchMedia("(max-width: 39.999rem)");
+    const syncViewport = () => {
+      if (detailsRef.current) detailsRef.current.open = !mobileViewport.matches;
+    };
+
+    syncViewport();
+    mobileViewport.addEventListener("change", syncViewport);
+    return () => mobileViewport.removeEventListener("change", syncViewport);
+  }, []);
+
+  return (
+    <details
+      className="footer-group footer-group--collapsible"
+      ref={detailsRef}
+    >
+      <summary className="footer-label">
+        {label}
+        <span aria-hidden="true">+</span>
+      </summary>
+      <div className="footer-group__links">{children}</div>
+    </details>
+  );
+}
+
 export function SiteFooter({ locale }: { locale: Locale }) {
   const items = navItems(locale);
 
@@ -201,13 +235,22 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         </p>
       </div>
       <div className="site-footer__grid">
-        <div>
-          <p className="footer-label">{locale === "sv" ? "Kontakt" : "Contact"}</p>
-          <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+        <div className="footer-group">
+          <p className="footer-label">
+            {locale === "sv" ? "Affärskontakt" : "Business contact"}
+          </p>
           <a href={`tel:${siteConfig.phoneHref}`}>{siteConfig.phoneDisplay}</a>
+          <a
+            href={siteConfig.bookingUrl}
+            target="_blank"
+            rel="noreferrer"
+            data-track="booking-footer"
+          >
+            {locale === "sv" ? "Boka ett möte" : "Book a meeting"} ↗
+          </a>
+          <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
         </div>
-        <div>
-          <p className="footer-label">{locale === "sv" ? "Företag" : "Company"}</p>
+        <FooterDisclosure label={locale === "sv" ? "Företag" : "Company"}>
           {items.map((item) => (
             <a key={item.href} href={item.href}>
               {item.label}
@@ -216,9 +259,8 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <a href={getRoute("privacy", locale)}>
             {locale === "sv" ? "Integritet" : "Privacy"}
           </a>
-        </div>
-        <div>
-          <p className="footer-label">{locale === "sv" ? "Tjänster" : "Services"}</p>
+        </FooterDisclosure>
+        <FooterDisclosure label={locale === "sv" ? "Tjänster" : "Services"}>
           <a href={getRoute("service:seo", locale)}>SEO</a>
           <a href={getRoute("service:aeo", locale)}>AEO</a>
           <a href={getRoute("service:websites", locale)}>
@@ -230,19 +272,16 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <a href={getRoute("service:voice", locale)}>
             {locale === "sv" ? "AI-telefonister" : "AI voice agents"}
           </a>
-        </div>
-        <div>
+          <a href={getRoute("service:localization", locale)}>
+            {locale === "sv"
+              ? "Flerspråkig e-handel"
+              : "Multilingual ecommerce"}
+          </a>
+        </FooterDisclosure>
+        <div className="footer-group footer-group--legal">
           <p className="footer-label">ScaleCommerce Group AB</p>
           <p>{siteConfig.organizationNumber}</p>
           <p>{locale === "sv" ? siteConfig.addressSv : siteConfig.address}</p>
-          <div className="footer-socials">
-            <a href={siteConfig.linkedIn} target="_blank" rel="noreferrer">
-              LinkedIn ↗
-            </a>
-            <a href={siteConfig.instagram} target="_blank" rel="noreferrer">
-              Instagram ↗
-            </a>
-          </div>
         </div>
       </div>
       <div className="site-footer__bottom">
