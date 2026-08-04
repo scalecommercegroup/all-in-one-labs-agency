@@ -12,8 +12,8 @@
   --success: oklch(0.52 0.13 150);
   --error: oklch(0.52 0.18 25);
   --surface: var(--paper);
-  --font-heading: var(--font-display), "Arial Narrow", sans-serif;
-  --font-copy: var(--font-body), "Segoe UI", sans-serif;
+  --font-heading: var(--font-brand), "Helvetica Neue", Arial, sans-serif;
+  --font-copy: var(--font-brand), "Helvetica Neue", Arial, sans-serif;
   --space-2xs: 0.25rem;
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
@@ -129,18 +129,22 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(4rem, 11vw, 10rem);
-  line-height: 0.82;
+  font-size: clamp(3rem, 12.5vw, 10rem);
+  line-height: 1.04;
 }
 
 h2 {
   font-size: clamp(2.8rem, 6.4vw, 6.6rem);
-  line-height: 0.91;
+  line-height: 1.02;
 }
 
 h3 {
   font-size: clamp(1.35rem, 2vw, 2rem);
   line-height: 1;
+}
+
+.heading-token {
+  white-space: nowrap;
 }
 
 .skip-link {
@@ -302,6 +306,7 @@ h3 {
   font-size: 0.98rem;
   letter-spacing: -0.04em;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .brand-mark__type strong {
@@ -322,7 +327,7 @@ h3 {
   min-height: 4.75rem;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: var(--space-xl);
+  gap: clamp(var(--space-xs), 2vw, var(--space-xl));
   border-bottom: 1px solid color-mix(in oklch, var(--blue) 32%, var(--ink));
   padding: 0 max(1rem, env(safe-area-inset-right)) 0
     max(1rem, env(safe-area-inset-left));
@@ -1396,7 +1401,7 @@ h3 {
   max-width: 9ch;
   margin-left: -0.055em;
   font-size: clamp(3.4rem, 9vw, 9rem);
-  line-height: 0.84;
+  line-height: 1.04;
   text-transform: uppercase;
 }
 
@@ -2307,7 +2312,7 @@ h3 {
     max-width: 100%;
     font-size: clamp(2.25rem, 11.5vw, 4rem);
     hyphens: auto;
-    line-height: 0.9;
+    line-height: 1.04;
     overflow-wrap: anywhere;
   }
 
@@ -2334,9 +2339,32 @@ h3 {
   }
 }
 
+@media (max-width: 22rem) {
+  .site-header {
+    gap: var(--space-sm);
+  }
+
+  .brand-mark {
+    gap: var(--space-xs);
+  }
+
+  .brand-mark__type {
+    gap: var(--space-2xs);
+    font-size: 0.9rem;
+  }
+
+  .mobile-menu summary {
+    gap: var(--space-xs);
+  }
+}
+
 @media (min-width: 40rem) {
   :root {
     --container: min(100% - 3rem, 92rem);
+  }
+
+  h1 {
+    font-size: clamp(4rem, 11vw, 10rem);
   }
 
   .chatbot-showcase__scenarios > div {

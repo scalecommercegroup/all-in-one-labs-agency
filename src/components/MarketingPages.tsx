@@ -32,6 +32,18 @@ function Eyebrow({
   return <p className={`eyebrow${light ? " eyebrow--light" : ""}`}>{children}</p>;
 }
 
+function protectHeadingTokens(text: string) {
+  return text.split(/(\s+)/u).map((token, index) =>
+    /\s+/u.test(token) ? (
+      token
+    ) : (
+      <span className="heading-token" key={`${token}-${index}`}>
+        {token}
+      </span>
+    ),
+  );
+}
+
 function BookingLink({
   locale,
   className = "button button--dark",
@@ -204,7 +216,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       <section className="hero">
         <div className="hero__copy">
           <Eyebrow>{copy.eyebrow}</Eyebrow>
-          <h1>{copy.title}</h1>
+          <h1>{protectHeadingTokens(copy.title)}</h1>
           <p className="hero__intro">{copy.intro}</p>
           <div className="hero__actions">
             <BookingLink locale={locale} tracking="booking-hero" />
@@ -296,7 +308,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
       <JsonLd data={breadcrumbSchema(locale)} />
       <section className="page-hero page-hero--services">
         <Eyebrow>{copy.servicesEyebrow}</Eyebrow>
-        <h1>{copy.servicesTitle}</h1>
+        <h1>{protectHeadingTokens(copy.servicesTitle)}</h1>
         <p>{copy.servicesIntro}</p>
       </section>
       <section className="section section--service-directory">
@@ -347,7 +359,7 @@ export function ServicePage({
       <section className="service-hero">
         <div>
           <Eyebrow>{copy.eyebrow}</Eyebrow>
-          <h1>{copy.title}</h1>
+          <h1>{protectHeadingTokens(copy.title)}</h1>
         </div>
         <div className="service-hero__aside">
           <p>{copy.intro}</p>
@@ -483,7 +495,7 @@ export function CasesPage({ locale }: { locale: Locale }) {
       <section className="case-hero">
         <div className="case-hero__title">
           <Eyebrow>{copy.casesEyebrow}</Eyebrow>
-          <h1>{copy.casesTitle}</h1>
+          <h1>{protectHeadingTokens(copy.casesTitle)}</h1>
         </div>
         <div className="case-hero__aside">
           <p>{copy.casesIntro}</p>
@@ -568,7 +580,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
       <section className="about-hero">
         <div className="about-hero__title">
           <Eyebrow>{copy.aboutEyebrow}</Eyebrow>
-          <h1>{copy.aboutTitle}</h1>
+          <h1>{protectHeadingTokens(copy.aboutTitle)}</h1>
         </div>
         <div className="about-hero__aside">
           <span aria-hidden="true">04</span>
@@ -675,7 +687,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
       <section className="contact-hero">
         <div>
           <Eyebrow>{copy.contactEyebrow}</Eyebrow>
-          <h1>{copy.contactTitle}</h1>
+          <h1>{protectHeadingTokens(copy.contactTitle)}</h1>
           <p>{copy.contactIntro}</p>
         </div>
         <div className="contact-hero__direct">
@@ -763,7 +775,7 @@ export function PrivacyPage({ locale }: { locale: Locale }) {
     <PageShell locale={locale}>
       <section className="page-hero page-hero--legal">
         <Eyebrow>{copy.privacyEyebrow}</Eyebrow>
-        <h1>{copy.privacyTitle}</h1>
+        <h1>{protectHeadingTokens(copy.privacyTitle)}</h1>
         <p>
           {isSv
             ? "Senast granskad 28 juli 2026. Policyn beskriver den publika webbplatsen – inte alla framtida kundlösningar."

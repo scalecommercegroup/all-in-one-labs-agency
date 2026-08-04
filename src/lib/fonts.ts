@@ -1,15 +1,9 @@
-import { Albert_Sans, Familjen_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 
-export const displayFont = Familjen_Grotesk({
+export const brandFont = Inter({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-brand",
   display: "swap",
 });
 
-export const bodyFont = Albert_Sans({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-export const fontVariables = `${displayFont.variable} ${bodyFont.variable}`;
+export const fontVariables = brandFont.variable;

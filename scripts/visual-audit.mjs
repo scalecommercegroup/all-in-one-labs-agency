@@ -27,6 +27,13 @@ const viewports = [
       viewport: { width: 390, height: 844 },
     },
   },
+  {
+    name: "narrow-mobile",
+    context: {
+      ...devices["Pixel 7"],
+      viewport: { width: 320, height: 700 },
+    },
+  },
 ];
 
 function routeSlug(pathname) {
@@ -115,6 +122,154 @@ async function inspectPage(page) {
         };
       });
 
+    const visibleTextElements = [
+      ...document.querySelectorAll("h1, h2, h3, p, a, button, summary, label, li"),
+    ].filter(
+      (element) =>
+        element.textContent?.trim() &&
+        element.checkVisibility({
+          checkOpacity: true,
+          checkVisibilityCSS: true,
+        }),
+    );
+
+    const fontMismatches = visibleTextElements
+      .filter((element) => !getComputedStyle(element).fontFamily.includes("Inter"))
+      .slice(0, 12)
+      .map((element) => ({
+        tag: element.tagName.toLowerCase(),
+        className:
+          typeof element.className === "string" ? element.className : "",
+        text: element.textContent?.trim().slice(0, 80) ?? "",
+        fontFamily: getComputedStyle(element).fontFamily,
+      }));
+
+    const clippedText = visibleTextElements
+      .flatMap((element) => {
+        const textRange = document.createRange();
+        textRange.selectNodeContents(element);
+        const textRects = [...textRange.getClientRects()].filter(
+          (rect) => rect.width > 0 && rect.height > 0,
+        );
+        const clippingAncestors = [];
+        let ancestor = element;
+
+        while (ancestor && ancestor !== document.body) {
+          const style = getComputedStyle(ancestor);
+          if (
+            ["hidden", "clip"].includes(style.overflowX) ||
+            ["hidden", "clip"].includes(style.overflowY)
+          ) {
+            clippingAncestors.push(ancestor);
+          }
+          ancestor = ancestor.parentElement;
+        }
+
+        const clippedBy = clippingAncestors.find((clippingAncestor) => {
+          const clipRect = clippingAncestor.getBoundingClientRect();
+          return textRects.some(
+            (rect) =>
+              rect.left < clipRect.left - 1 ||
+              rect.right > clipRect.right + 1 ||
+              rect.top < clipRect.top - 1 ||
+              rect.bottom > clipRect.bottom + 1,
+          );
+        });
+
+        return clippedBy
+          ? [
+              {
+                tag: element.tagName.toLowerCase(),
+                className:
+                  typeof element.className === "string"
+                    ? element.className
+                    : "",
+                text: element.textContent?.trim().slice(0, 80) ?? "",
+                clippedBy:
+                  typeof clippedBy.className === "string"
+                    ? clippedBy.className
+                    : clippedBy.tagName.toLowerCase(),
+              },
+            ]
+          : [];
+      })
+      .slice(0, 12);
+
+    const headingLineIssues = [...document.querySelectorAll("h1, h2, h3")]
+      .filter((heading) => heading.checkVisibility())
+      .flatMap((heading) => {
+        const lines = [];
+        const walker = document.createTreeWalker(
+          heading,
+          NodeFilter.SHOW_TEXT,
+        );
+        let textNode = walker.nextNode();
+
+        while (textNode) {
+          for (let index = 0; index < textNode.textContent.length; index += 1) {
+            const character = textNode.textContent[index];
+            const range = document.createRange();
+            range.setStart(textNode, index);
+            range.setEnd(textNode, index + 1);
+            const rect = range.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+              let line = lines.find(
+                (candidate) => Math.abs(candidate.top - rect.top) < 2,
+              );
+              if (!line) {
+                line = { top: rect.top, text: "" };
+                lines.push(line);
+              }
+              line.text += character;
+            }
+          }
+          textNode = walker.nextNode();
+        }
+
+        lines.sort((first, second) => first.top - second.top);
+        const style = getComputedStyle(heading);
+        const fontSize = Number.parseFloat(style.fontSize);
+        const lineHeight = Number.parseFloat(style.lineHeight);
+        const text = heading.textContent?.trim() ?? "";
+        const orphanPunctuation = lines
+          .map((line) => line.text.trim())
+          .filter((line) => /^[.,:;!?…]/u.test(line));
+        const unsafeNordicLeading =
+          /[ÅÄÖåäö]/u.test(text) &&
+          lines.length > 1 &&
+          lineHeight < fontSize;
+
+        return orphanPunctuation.length > 0 || unsafeNordicLeading
+          ? [
+              {
+                tag: heading.tagName.toLowerCase(),
+                className:
+                  typeof heading.className === "string"
+                    ? heading.className
+                    : "",
+                text: text.slice(0, 100),
+                lines: lines.map((line) => line.text.trim()),
+                orphanPunctuation,
+                fontSize,
+                lineHeight,
+                unsafeNordicLeading,
+              },
+            ]
+          : [];
+      })
+      .slice(0, 12);
+
+    const nordicGlyphCount = visibleTextElements.reduce(
+      (count, element) =>
+        count + (element.textContent?.match(/[ÅÄÖåäö]/gu)?.length ?? 0),
+      0,
+    );
+    const brandType = document.querySelector(".site-header .brand-mark__type");
+    const wrappedBrand = brandType
+      ? brandType.getBoundingClientRect().height >
+        Number.parseFloat(getComputedStyle(brandType).lineHeight) * 1.5
+      : false;
+
     return {
       title: document.title,
       language: document.documentElement.lang,
@@ -125,6 +280,11 @@ async function inspectPage(page) {
       viewportWidth: width,
       horizontalOverflow: documentWidth > width + 1,
       overflowElements,
+      fontMismatches,
+      clippedText,
+      headingLineIssues,
+      nordicGlyphCount,
+      wrappedBrand,
       smallTargets: interactiveElements.filter(
         (element) =>
           !element.exemptInlineTextLink &&
@@ -176,10 +336,17 @@ try {
         timeout: 45_000,
       });
       await page.evaluate(async () => {
+        document.documentElement.style.scrollBehavior = "auto";
         await document.fonts.ready;
-        window.scrollTo(0, document.body.scrollHeight);
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "instant",
+        });
         await new Promise((resolve) => setTimeout(resolve, 80));
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: "instant" });
+        await new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        );
       });
 
       const inspection = await inspectPage(page);
@@ -232,6 +399,10 @@ const failures = report.pages.filter(
     page.headingOneCount !== 1 ||
     page.mainCount !== 1 ||
     !page.fontsReady ||
+    page.fontMismatches.length > 0 ||
+    page.clippedText.length > 0 ||
+    page.headingLineIssues.length > 0 ||
+    page.wrappedBrand ||
     page.smallTargets.length > 0,
 );
 
@@ -255,6 +426,11 @@ console.log(
         headingOneCount: page.headingOneCount,
         mainCount: page.mainCount,
         fontsReady: page.fontsReady,
+        fontMismatches: page.fontMismatches,
+        clippedText: page.clippedText,
+        headingLineIssues: page.headingLineIssues,
+        nordicGlyphCount: page.nordicGlyphCount,
+        wrappedBrand: page.wrappedBrand,
         smallTargets: page.smallTargets,
       })),
     },
