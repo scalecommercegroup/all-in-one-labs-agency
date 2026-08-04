@@ -113,7 +113,7 @@ export function SiteHeader() {
         href={getRoute("home", locale)}
         aria-label={siteConfig.name}
       >
-        <BrandMark />
+        <BrandMark inverse />
       </a>
 
       <nav className="desktop-nav" aria-label={locale === "sv" ? "Huvudmeny" : "Main navigation"}>
@@ -135,7 +135,7 @@ export function SiteHeader() {
           {copy.language}
         </a>
         <a
-          className="button button--dark button--header"
+          className="button button--light button--header"
           href={siteConfig.bookingUrl}
           target="_blank"
           rel="noreferrer"

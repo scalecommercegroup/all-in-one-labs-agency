@@ -323,11 +323,11 @@ h3 {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-xl);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid color-mix(in oklch, var(--blue) 32%, var(--ink));
   padding: 0 max(1rem, env(safe-area-inset-right)) 0
     max(1rem, env(safe-area-inset-left));
-  background: color-mix(in oklch, var(--paper) 90%, transparent);
-  backdrop-filter: blur(18px);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .brand-link {
@@ -363,7 +363,7 @@ h3 {
   height: 1px;
   transform: scaleX(0);
   transform-origin: right;
-  background: currentColor;
+  background: var(--blue);
   content: "";
   transition: transform var(--duration-base) var(--ease-out);
 }
@@ -410,9 +410,9 @@ h3 {
   width: 1.9rem;
   height: 1.9rem;
   place-items: center;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--blue);
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--blue);
 }
 
 .mobile-menu__disc i,
